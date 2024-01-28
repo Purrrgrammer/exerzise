@@ -1,0 +1,41 @@
+old date selector
+
+  const time = createTimeTable().map((el) => ({
+    ...el,
+    day: dayNames[currentDay],
+  }));
+  console.log(time);
+
+
+
+
+  
+  const timeSelectHandler = (time: string, index: number) => {
+    setTimeSelected((prev: any) => [
+      ...prev,
+      {
+        time: time,
+        day: dayNames[currentDay],
+        date: "",
+        value: index,
+      },
+    ]);
+    // console.log(timeSelected);
+    // console.log(removeDupe(timeSelected));
+  };
+
+
+
+     {time.map((i, index) => (
+          <div
+            key={index}
+            className={`p-2 hover:bg-slate-100 cursor-pointer ${
+              isThisSelected(i) ? "bg-red-300" : "bg-slate-200"
+            }`}
+            onClick={() => {
+              timeSelectHandler(i.time, index);
+            }}
+          >
+            {i.time}
+          </div>
+        ))}

@@ -1,0 +1,4 @@
+red => #E94823
+white => #FFFFFF
+greyish => #D8D8D8
+black => #0000

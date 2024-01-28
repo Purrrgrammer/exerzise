@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: "Bebas Neue", sans-serif;
+}
+html {
+  overflow-x: hidden;
+  padding: 0 0;
+}
+.text-header {
+  font-size: 1.5rem;
+}
+
+.universal-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.nav a:hover {
+  color: black;
+  background-color: #d8d8d8;
+}
+.nav a.activeL {
+  color: black;
+  background-color: #e94823;
+}
+.nav a {
+  color: grey;
+  padding: 20px;
+  background-color: transparent;
+  transition: 0.3s ease-in;
+}
+.nav {
+  z-index: 1000;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  align-items: center;
+  color: black;
+  height: 80px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 3px;
+}
+.home {
+  margin-right: 100px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.active {
+  background-color: white;
+  transition: 0.6s;
+  font-weight: bold;
+  color: black;
+}
+.non-active {
+  background-color: white;
+  color: whitesmoke;
+}
+
+.zzz {
+  z-index: 100;
+}
+
+.main-logo-container {
+  height: 20px;
+  width: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.main-logo {
+  object-fit: cover;
+  height: 50px;
+  width: 50px;
+}
+.cover-container {
+  width: 100vw;
+  height: 700px;
+  overflow: hidden;
+}
+.cover {
+  width: auto;
+  object-fit: cover;
+  width: 100%;
+}
+.cover-header {
+  position: absolute;
+  color: white;
+  font-size: 10rem;
+  top: 40%;
+  left: 40%;
+  z-index: 10;
+}
+
+.bar {
+  background-color: #d8d8d8;
+  border-radius: 20px 20px 0 0;
+}
+.stack {
+  bottom: -200px;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+}
+.box1 {
+  background-color: black;
+}
+.body1 {
+  background-image: url("https://images.squarespace-cdn.com/content/v1/5a5fef62a9db0982c2cfdf44/1521131262182-FFIIB0WJWMKU4FXAUIDE/Sports-Training-Banner.jpg?format=1500w");
+  height: 500px;
+  color: white;
+}
+.body1 {
+  /* background-image: url("https://images.squarespace-cdn.com/content/v1/5a5fef62a9db0982c2cfdf44/1521131262182-FFIIB0WJWMKU4FXAUIDE/Sports-Training-Banner.jpg?format=1500w"); */
+  height: 500px;
+  color: white;
+  background-color: #ffffff;
+}
+
+.img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+.img-container {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+.grid-text {
+  padding: 100px;
+  height: 100%;
+  width: 100%;
+  background: #d8d8d8;
+}
+
+.card-container {
+  width: 300px;
+  margin: 0 50px;
+}
+.coach-bg {
+  position: relative;
+  height: 250px;
+  width: 300px;
+  object-fit: cover;
+  background-color: #e94823;
+}
+.coach-img {
+  width: 250px;
+  position: absolute;
+  object-fit: cover;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -0%);
+}
+
+.coach-bio {
+  padding: 20px;
+  width: 100%;
+  height: 300px;
+  border-radius: 0 0px 50px 50px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-bar {
+  background-color: #d8d8d8;
+}
+
+.filter-btn {
+  transition: 0.3s;
+}
+.filter-btn:hover {
+  background-color: #e94823;
+  cursor: pointer;
+}
+
+#none {
+  color: white;
+}
