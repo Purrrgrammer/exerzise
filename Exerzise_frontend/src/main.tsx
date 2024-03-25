@@ -16,7 +16,7 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 // RTK Query
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
-import { apiSlice } from "./features/api/apiSlice";
+import { apiSlice, bookingApi } from "./features/api/apiSlice";
 import { ProtectedRoute } from "./pages/ProtectedRoute";
 import CoachSchedule from "./pages/CoachSchedule";
 

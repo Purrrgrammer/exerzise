@@ -1,16 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userResponse } from "../../interfaces";
-type coachDataType = {
-  userId: string;
-  detail: string;
-  firstName: string;
-  lastName: string;
-  phonenumber: string;
-  role: string;
-  session: string;
-  userImg: string;
-  username: string;
-};
+import {
+  bookingDataResponse,
+  coachDataType,
+  userLoginResponse,
+} from "../../interfaces";
+
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/" }),
@@ -31,7 +25,7 @@ export const apiSlice = createApi({
         body: usernamepassword,
       }),
       transformResponse: (
-        response: { data: userResponse; _token: string; success: boolean },
+        response: { data: userLoginResponse; _token: string; success: boolean },
         meta,
         arg
       ) => response,
@@ -42,27 +36,88 @@ export const apiSlice = createApi({
       transformResponse: (response: { data: any; success: boolean }) =>
         response.data,
     }),
+
+    getCoachSceduleByDay: builder.query<
+      any,
+      { coachId: string | undefined; date: string }
+    >({
+      query: (arg) => `/coachschedule/${arg.coachId}?time=30&date=${arg.date}`,
+      providesTags: ["users"],
+      transformResponse: (response: {
+        data: any;
+        availableTime: string;
+      }): any => response,
+    }),
     getCoach: builder.query<any, any>({
       query: (userId) => `coach/${userId}`,
       providesTags: (result, error, id) => [{ type: "users", id }],
+      transformResponse: (response: {
+        data: coachDataType;
+        success: boolean;
+      }) => response.data,
+    }),
+    postSchedule: builder.mutation<
+      any,
+      { timeAvailable: any | undefined; coachId: string | null }
+    >({
+      //call dispatch and passin the data.unwrap()** =return promise
+      query: (arg: any) => ({
+        url: `/coach/schedule/${arg.coachId}`,
+        method: "POST",
+        body: arg.timeAvailable,
+        params: arg.coachId,
+      }),
+    }),
+    getBookings: builder.query<any, any>({
+      query: (userId) => `schedule/${userId}`,
+      providesTags: (result, error, id) => [{ type: "users", id }],
+      transformResponse: (response: {
+        data: bookingDataResponse;
+        success: boolean;
+      }) => response.data,
+    }),
+    getCoachTime: builder.query<any, any>({
+      query: (coachId) => `/coachtime/${coachId}`,
+      providesTags: ["users"],
       transformResponse: (response: { data: any; success: boolean }) =>
         response.data,
     }),
-    setExz: builder.mutation({
-      //call dispatch and passin the data.unwrap()** =return promise
-      query: (exz) => ({
-        url: "/posts",
+    postBookings: builder.mutation<any, { coachId: any; bookings: any }>({
+      query: (arg) => ({
         method: "POST",
-        body: exz,
+        url: `/coach/${arg.coachId}`,
+        params: arg.coachId,
+        body: arg.bookings,
+      }),
+      transformResponse: (response: { data: any }, meta, arg) => response.data,
+    }),
+    updateBooking: builder.mutation({
+      query: ({ bookingId, status }) => ({
+        method: "PUT",
+        url: `/schedule/${bookingId}`,
+        body: { status },
+        params: bookingId,
+      }),
+    }),
+    updateComment: builder.mutation<any, any>({
+      query: ({ bookingIdd, data }) => ({
+        method: "PUT",
+        url: `comment/${bookingIdd}`,
+        body: data ,
       }),
     }),
   }),
 });
-// this create custom hooks trough the names
-
 export const {
   useGetCoachQuery,
   useLoginMutation,
   useRegisterMutation,
   useGetAllCoachesQuery,
+  useGetCoachSceduleByDayQuery,
+  usePostScheduleMutation,
+  useGetBookingsQuery,
+  useUpdateBookingMutation,
+  useGetCoachTimeQuery,
+  usePostBookingsMutation,
+  useUpdateCommentMutation,
 } = apiSlice;

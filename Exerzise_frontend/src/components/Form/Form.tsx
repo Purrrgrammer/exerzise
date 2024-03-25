@@ -20,6 +20,7 @@ const Form = ({ setPageState, pageState }: formprops) => {
   const formRef = useRef<any>();
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
+
   const submitHandler = (e: any) => {
     e.preventDefault();
     if (pageState === "login") {
@@ -27,7 +28,12 @@ const Form = ({ setPageState, pageState }: formprops) => {
         .unwrap()
         .then((data) => {
           console.log("data", data);
-          dispatch(setUser(data));
+          if (data.success) {
+            console.log(data.message);
+            dispatch(setUser(data));
+          } else {
+            alert(data.message);
+          }
         });
       navigate("/home");
     } else {

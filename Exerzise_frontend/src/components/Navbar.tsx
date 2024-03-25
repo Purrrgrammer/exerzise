@@ -3,13 +3,12 @@ import { Link, NavLink } from "react-router-dom";
 import AddBtn from "./AddBtn";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { useSelector } from "react-redux";
+import { findLocalUser } from "../function";
 
 const Navbar = () => {
   const globalUser = useSelector((state: any) => state.user);
-  const user =
-    localStorage.getItem("user") === undefined
-      ? globalUser
-      : JSON.parse(localStorage.getItem("user")!);
+  const user = findLocalUser("user", globalUser);
+
   const pages = [
     { name: "Exerzise", path: "/home", icon: "../../public/logo1.jpg" },
     { name: "About", path: "/about" },
@@ -18,17 +17,6 @@ const Navbar = () => {
     { name: "Coaches", path: "/coach" },
   ];
 
-  // const user = [
-  //   //from backend
-  //   { name: "Log", path: "/log", icon: "" },
-  //   {
-  //     name: "Profile",
-  //     path: "/user",
-  //     icon: JSON.parse(localStorage.getItem("user")!)
-  //       ? JSON.parse(localStorage.getItem("user")!).userImage
-  //       : "https://images.pexels.com/photos/14918477/pexels-photo-14918477.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  //   },
-  // ];
   const [nav, setNav] = useState(false);
 
   const handleNav = () => {
@@ -70,24 +58,14 @@ const Navbar = () => {
           }
         >
           <div className=" lg:px-10 ">
-            <img className="w-5 h-5" src={user.userImage} alt={user.username} />{" "}
+            <img
+              className="w-5 h-5"
+              src={user?.userImage}
+              alt={user?.username}
+            />{" "}
           </div>
         </NavLink>
-        {/* {user.map((el, index) => (
-          <NavLink
-            key={index}
-            to={el.path}
-            className={({ isActive, isPending }) =>
-              isActive ? "activeL" : isPending ? "pending" : ""
-            }
-          >
-            <div className=" lg:px-10 ">
-              <img className="w-5 h-5" src={el.icon} alt={el.name} />{" "}
-            </div>
-          </NavLink>
-        ))} */}
       </div>
-
       {/* mobile Icon*/}
       <div
         onClick={handleNav}
@@ -125,20 +103,9 @@ const Navbar = () => {
           className="p-4 border-b rounded-xl hover:bg-[#D8D8D8] duration-300 hover:text-black text-white cursor-pointer border-gray-600"
         >
           <Link to={"/user"} id="none">
-            {user.username}
+            {user?.username}
           </Link>
         </li>
-
-        {/* {user.map((item, index) => (
-          <li
-            key={index}
-            className="p-4 border-b rounded-xl hover:bg-[#D8D8D8] duration-300 hover:text-black text-white cursor-pointer border-gray-600"
-          >
-            <Link to={item.path} id="none">
-              {item.name}
-            </Link>
-          </li>
-        ))} */}
       </ul>
     </div>
   );

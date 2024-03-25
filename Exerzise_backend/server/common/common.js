@@ -56,7 +56,12 @@ const verifyToken = async (token) => {
   }
 };
 
+const removeObjectValueDupe = (arr, key) => {
+  // key
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
+};
 module.exports = {
   passwordExc: { cryptPassword, decryptPassword },
   tokenExc: { generateToken, verifyToken },
+  otherExc: { removeObjectValueDupe },
 };

@@ -46,13 +46,13 @@ export const Input = ({
   type = "text",
   placeholder,
   label = "label",
-  setFormvalue,
   formValue,
+  setFormvalue,
 }: any) => {
   const [activeRole, setActiveRole] = useState("user");
   const roleValue = [{ name: "user" }, { name: "coach" }];
   const [_value, setValue] = useState("");
-  
+
   const onSearchChange = (e: { target: { value: SetStateAction<string> } }) => {
     setFormvalue({ ...formValue, [id]: e.target.value }); // from use side
     console.log(formValue);

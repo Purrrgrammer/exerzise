@@ -1,12 +1,10 @@
 import { useSelector } from "react-redux";
 import { JustAButton } from "../regular";
+import { findLocalUser } from "../../function";
 
 const SideBar = ({ setContent }) => {
   const globalUser = useSelector((state: any) => state.user);
-  const user =
-    localStorage.getItem("user") && localStorage.getItem("user") !== undefined
-      ? JSON.parse(localStorage.getItem("user")!)
-      : globalUser;
+  const user = findLocalUser("user", globalUser);
   const link = [{ name: "profile" }, { name: "history" }, { name: "favorite" }];
   return (
     <div className="h-screen w-[200px] bg-red-200 p-4 flex flex-col items-center">

@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const register = async (req, res) => {
   let responseData = {};
-  
+
   try {
     let input = req.body;
     console.log(input);

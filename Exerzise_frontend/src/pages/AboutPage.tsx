@@ -1,13 +1,14 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import Stars from "../components/Stars";
-import Footer from "../components/Footer";
 import Booking from "../components/Booking";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const AboutPage = () => {
   return (
     <>
       <Navbar />
+
       <Footer />
     </>
   );

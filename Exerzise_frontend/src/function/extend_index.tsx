@@ -1,3 +1,5 @@
+import { PriceRange, TimeRange } from "../interfaces";
+
 // Response form bookingTime where date = 22/12/2024 and userId = xx
 let bookingTime = [
   {
@@ -25,7 +27,7 @@ let timeRanges = [
 ];
 
 export function generateTimeIntervals(timeRanges, typeTime) {
-  let result = [];
+  let result: any = [];
 
   timeRanges.forEach((range) => {
     let startTime = parseTime(range.start);
@@ -39,7 +41,7 @@ export function generateTimeIntervals(timeRanges, typeTime) {
 }
 
 export function removeBookingTimes(timeIntervals, bookingTime) {
-  let bookingTimes = [];
+  let bookingTimes: any = [];
 
   bookingTime.forEach((booking) => {
     let startTime = parseTime(booking.start);
@@ -51,7 +53,7 @@ export function removeBookingTimes(timeIntervals, bookingTime) {
     }
   });
 
-  return timeIntervals.filter((time) => !bookingTimes.includes(time));
+  return timeIntervals.filter((time: string) => !bookingTimes.includes(time));
 }
 
 // Helper functions
@@ -75,3 +77,45 @@ console.log("generatedIntervals", generatedIntervals);
 // create all free is time and filter by booking Time
 let availableIntervals = removeBookingTimes(generatedIntervals, bookingTime);
 console.log("availableIntervals", availableIntervals);
+
+export const convertByTimeType = (input, timeType) => {
+  //convert to + 30 mins
+  let front = input[0] + input[1];
+  let back = input[3] + input[4];
+  if (timeType === 30) {
+    if (back === "00") {
+      back = "30";
+    } else {
+      front = parseInt(front) + 1;
+      back = "00";
+    }
+  }
+  if (front === 24 || front === "24") {
+    front = "00";
+  }
+
+  return `${front}:${back}`;
+};
+
+// helper funtion
+//get price
+export function parseTimePrice(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+export function getOverlappingMinutes(
+  range1: TimeRange,
+  range2: PriceRange
+): number {
+  // console.log(range1);
+  // console.log(range2);
+  const start1 = parseTimePrice(range1.startTime);
+  const end1 = parseTimePrice(range1.endTime);
+  const start2 = parseTimePrice(range2.start);
+  const end2 = parseTimePrice(range2.end);
+  const startMax = Math.max(start1, start2);
+  const endMin = Math.min(end1, end2);
+  // console.log(Math.max(0, endMin - startMax));
+
+  return Math.max(0, endMin - startMax);
+}

@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-const FilterBar = () => {
-  const [filterState, setFilterState] = useState("all");
+const FilterBar = ({ filterState, setFilterState }) => {
+  // const [filterState, setFilterState] = useState("all");
 
-  const exzType = [
+  const sessions = [
+    { name: "all" },
     { name: "basketball" },
     { name: "fitness" },
     { name: "soccer" },
@@ -15,7 +16,7 @@ const FilterBar = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="filter-bar py-2 flex w-screen justify-center ">
-        {exzType.map((el, index) => (
+        {sessions.map((el, index) => (
           <button
             onClick={() => {
               setFilterState(el.name);

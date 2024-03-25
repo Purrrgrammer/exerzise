@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { dayNames } from "../base";
 
 export const getInitialFormObjects = (formArr: any) => {
@@ -48,24 +49,12 @@ export const categorize = (arr) => {
 
 export const getDateinWeeks = (param) => {
   const today = new Date();
-
   let dateday = today.getDate();
   let month = today.getMonth() + 1;
   let year = today.getFullYear();
   let day = today.getDay();
   let currentDate = `${dayNames[day]} ${dateday}/${month}/${year}`;
-  // if (param === "L") {
-  //   day - 1;
-  //   return currentDate;
-  // }
-  // if (param === "R") {
-  //   day + 1;
-  //   return currentDate;
-  // }
-  // if (param === "X") {
-  // }
   return currentDate;
-  console.log(currentDate); // "17-6-2022"
 };
 
 // const today = new Date();
@@ -75,11 +64,21 @@ export const getDateinWeeks = (param) => {
 // const ThisDay = dayNames.find(
 //   (el) => dayNames.indexOf(el) === dynamicDay.getDay()
 // );
-
 // const [newTimeSelected, setNewTimeSelected] = useState(tomorrow);
-
-
-
 // Generate Time
 
+export const removeObjectValueDupe = (arr, key) => {
+  // key
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
+};
 
+export const findLocalUser = (user: string, globalUser: any) => {
+  if (
+    localStorage.getItem(user) &&
+    JSON.parse(localStorage.getItem(user)!) !== undefined
+  ) {
+    return JSON.parse(localStorage.getItem(user)!);
+  } else {
+    return globalUser;
+  }
+};

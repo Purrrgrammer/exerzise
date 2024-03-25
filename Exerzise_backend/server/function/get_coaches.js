@@ -13,13 +13,15 @@ const getCoaches = async (req, res) => {
     responseData.data = response.rows.map((i) => ({
       userId: i.user_id,
       username: i.username,
-      firstName: i.first_name,
-      lastName: i.last_name,
+      firstname: i.first_name,
+      lastname: i.last_name,
       role: i.role,
       session: i.session,
       detail: i.detail,
       phonenumber: i.phone_number,
       userImg: i.user_image,
+      rating: i.rating,
+      ratingCount: i.rating_count,
     }));
   } catch (error) {
     responseData.success = false;
