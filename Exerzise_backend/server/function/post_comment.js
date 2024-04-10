@@ -1,7 +1,7 @@
 const pool = require("../db/pool");
 const common = require("../common/common");
 
-const postComment = async (req, res) => {
+const deleteSchedule = async (req, res) => {
   let responseData = {};
   const input = req.body;
   const bookingId = req.params.bookingId;
@@ -22,4 +22,4 @@ const postComment = async (req, res) => {
   return res.end();
 };
 
-module.exports = postComment;
+module.exports = deleteSchedule;

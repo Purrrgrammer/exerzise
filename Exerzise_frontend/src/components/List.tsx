@@ -13,11 +13,12 @@ const List = () => {
     data: bookings,
     isLoading,
     error,
-  } = useGetBookingsQuery(
-    localStorage.getItem("user")
+  } = useGetBookingsQuery({
+    userId: localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user")!).userId
-      : null
-  );
+      : null,
+    allDone: true,
+  });
   console.log("bookings", bookings);
 
   return (
@@ -94,7 +95,7 @@ const List = () => {
                             }`}
                             style={{ opacity: 1 }}
                           >
-                            <span className="">{el.coachStatus}</span>
+                            <span className="">completed</span>
                           </div>
                         </div>
                       </td>

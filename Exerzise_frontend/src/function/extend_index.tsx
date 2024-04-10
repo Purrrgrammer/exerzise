@@ -72,11 +72,11 @@ function formatTime(date) {
 
 // create all free time by 30 minutes
 let generatedIntervals = generateTimeIntervals(timeRanges, 30); // 30 or 60;
-console.log("generatedIntervals", generatedIntervals);
+// console.log("generatedIntervals", generatedIntervals);
 
 // create all free is time and filter by booking Time
 let availableIntervals = removeBookingTimes(generatedIntervals, bookingTime);
-console.log("availableIntervals", availableIntervals);
+// console.log("availableIntervals", availableIntervals);
 
 export const convertByTimeType = (input, timeType) => {
   //convert to + 30 mins

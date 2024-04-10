@@ -8,20 +8,19 @@ const register = async (req, res) => {
   try {
     let input = req.body;
     console.log(input);
-
     let dupeUser = `SELECT * FROM public.users WHERE username = $1;`;
     let dupeParam = [input.username]; //prepare sql query
     const dupeResponse = await pool.query(dupeUser, dupeParam);
 
     if (dupeResponse.rowCount > 0) {
       responseData.success = false;
-      responseData.data = "duplicated user";
+      responseData.message = "duplicated user";
+      return res.status(403).send(responseData);
     } else {
       console.log(input.password);
       const cryptedPassword = await common.passwordExc.cryptPassword(
         input.password
       );
-
       console.log("cryptedPassword", cryptedPassword);
       let sql = `INSERT INTO public.users(
 	user_id, username, password, first_name, last_name, role,session, detail,phone_number, user_image)
@@ -41,14 +40,15 @@ const register = async (req, res) => {
       ];
       const result = await pool.query(sql, param);
       responseData.success = true;
-      responseData.data = result;
+      responseData.message = "Successfully registered";
+      return res.status(200).send(responseData);
     }
   } catch (error) {
     responseData.success = false;
     console.log(error);
   } finally {
   }
-  res.status(200).send(responseData); //success
+  // res.status(200).send(responseData); //success
 };
 
 module.exports = register;

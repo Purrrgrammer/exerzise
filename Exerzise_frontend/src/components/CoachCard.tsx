@@ -34,8 +34,8 @@ const CoachCard = ({ coachData }: coachcardprops) => {
                   <img
                     className="coach-img"
                     src={
-                      el.userImg
-                        ? el.userImg
+                      el.userImage
+                        ? el.userImage
                         : "https://e7.pngegg.com/pngimages/348/866/png-clipart-personal-trainer-fitness-centre-physical-fitness-strength-and-conditioning-coach-others-miscellaneous-tshirt.png"
                     }
                     alt=""
@@ -54,7 +54,7 @@ const CoachCard = ({ coachData }: coachcardprops) => {
                         name="half-rating-read"
                         defaultValue={2.5}
                         precision={0.5}
-                        value={el.rating / el.ratingCount}
+                        value={el.averageRating}
                         readOnly
                       />
                       <div className="ms-2">

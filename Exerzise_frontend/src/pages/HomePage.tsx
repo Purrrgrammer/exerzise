@@ -7,26 +7,39 @@ import FGrid from "../components/FGrid";
 import Footer from "../components/Footer";
 import Testomonials from "../components/Testomonials";
 import Benefits from "../components/Benefits";
+import { ActivitiesBox } from "../components/ActivitiesBox";
+import Gallery from "../components/Gallery";
+import HomeCover from "../components/HomeCover";
 
 const HomePage = () => {
   return (
     <div>
       <Navbar />
-      <div className="cover-container">
-        <img
-          className="cover"
-          src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3ltJTIwYmFja2dyb3VuZHxlbnwwfHwwfHx8MA%3D%3D"
-          alt=""
-        />
-        <div className="cover-header">welcome to Exerzise </div>
+      <HomeCover />
+      <div className="md:mt-[150px] relative ">
+        <div>
+          <Body1 />
+        </div>
+        <div className="static md:absolute -top-[270px] left-[50%] md:-translate-x-1/2 ">
+          <Bars />
+        </div>
       </div>
-      <Bars />
-      <Body1 />
-      <Benefits />
-      <FGrid />
+      <div className="my-5">
+        <Benefits />
+      </div>
       <div className="my-5">
         <Testomonials />
       </div>
+      <div className="my-5">
+        <h1 className="text-2xl text-center my-5">Gallery</h1>
+        <Gallery />
+      </div>
+
+      <div className="my-5">
+        <h1 className="text-2xl text-center my-5">Activities</h1>
+        <ActivitiesBox />
+      </div>
+      <FGrid />
       <Footer />
     </div>
   );

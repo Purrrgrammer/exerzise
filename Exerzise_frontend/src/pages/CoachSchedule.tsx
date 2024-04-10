@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import { categorize } from "../function";
 import CommonBtn from "../components/CommonBtn";
 import TimePickerValue from "../components/TimePicker";
-import DayPicker from "../components/dayPicker";
+import DayPicker from "../components/DayPicker";
+import CoachTimeContainer from "../components/coachTimeContainer";
+
 import dayjs from "dayjs";
 import {
+  useDeleteScheduleMutation,
   useGetCoachTimeQuery,
   usePostScheduleMutation,
 } from "../features/api/apiSlice";
@@ -20,10 +23,17 @@ interface timeSelectedType {
 }
 
 const CoachSchedule = () => {
+  const [
+    deleteSchedule,
+    { isLoading: isUpdating }, // This is the destructured mutation result
+  ] = useDeleteScheduleMutation();
   const { data, isLoading, error } = useGetCoachTimeQuery(
     JSON.parse(localStorage.getItem("user")!).userId
   );
-  console.log("coach time data", data);
+
+  useEffect(() => {
+    console.log("coach time data", data);
+  }, []);
 
   const [postSchedule] = usePostScheduleMutation();
 
@@ -35,11 +45,13 @@ const CoachSchedule = () => {
   );
   const [timeStart, setTimeStart] = useState<any>();
   const [timeEnd, setTimeEnd] = useState<any>();
-  useEffect(() => {
-    console.log("timeStart", timeStart);
-    console.log("timeEnd", timeEnd);
-  }, [timeStart, timeEnd]);
-
+  // useEffect(() => {
+  //   console.log("timeStart", timeStart);
+  //   console.log("timeEnd", timeEnd);
+  // }, [timeStart, timeEnd]);
+  const clearThisDay = () => {
+    console.log("clear");
+  };
   const timeSelectHandler = (timeS: string, timeE: string) => {
     setTimeSelected((prev: timeSelectedType[]) => {
       let result = [
@@ -65,6 +77,7 @@ const CoachSchedule = () => {
         setDayAdded={setDayAdded}
         setCurrentDay={setCurrentDay}
       />
+
       <div className="grid grid-cols-3 gap-2 w-1/5 mx-auto place-content-center justify-items-center"></div>
       <div className="flex gap-x-4 justify-center items-center">
         <TimePickerValue
@@ -74,45 +87,6 @@ const CoachSchedule = () => {
         />
         <div>-</div>
         <TimePickerValue label={"End Time"} val={timeEnd} setVal={setTimeEnd} />
-      </div>
-      <div>Existed Time</div>
-      {isLoading ? (
-        "loading"
-      ) : (
-        <div className="grid grid-cols-5 gap-3 mt-3 mx-7 ">
-          {data?.map((val, index: number) => (
-            <div
-              key={index}
-              className="bg-red-200 p-4 flex flex-col items-center"
-            >
-              <div className="flex gap-x-1">
-                <div className="">{dayNames[val.day]}</div>
-                <div className="">{val.date}</div>
-              </div>
-              <div className="">
-                {val.availableTime}-{val.endOfAvailableTime}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      <div>New Time</div>
-
-      <div className="grid grid-cols-5 gap-3 mt-3 mx-7 ">
-        {timeSelected.map((val, index: number) => (
-          <div
-            key={index}
-            className="bg-red-200 p-4 flex flex-col items-center"
-          >
-            <div className="flex gap-x-1">
-              <div className="">{dayNames[val.day]}</div>
-              <div className="">{val.date}</div>
-            </div>
-            <div className="">
-              {val.availableTime} - {val.endofAvailableTime}
-            </div>
-          </div>
-        ))}
       </div>
       {/* submit btn */}
       <div className="flex justify-center gap-x-2">
@@ -135,7 +109,54 @@ const CoachSchedule = () => {
             }}
           />
         }
+        {
+          <CommonBtn
+            placeholder={"clear"}
+            onClick={() => {
+              setTimeSelected([]);
+            }}
+          />
+        }
       </div>
+      <div className="m-5 w-full text-center">Current Available Time</div>
+      {isLoading ? (
+        "loading"
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 mx-7 ">
+          {data?.map((val, index: number) => (
+            <div
+              key={index}
+              className="bg-red-200 p-4 flex flex-col items-center relative"
+            >
+              <div className="flex gap-x-1 ">
+                <div className="">{dayNames[val.day]}</div>
+                <div className="">{val.date}</div>
+              </div>
+              <div className="">
+                {val.availableTime}-{val.endOfAvailableTime}
+              </div>
+              <button
+                onClick={() => {
+                  deleteSchedule({
+                    coachId: JSON.parse(localStorage.getItem("user")!).userId,
+                    day: val.day,
+                  });
+                }}
+                className="absolute text-white top-0 right-2 hover:text-slate-300"
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <CoachTimeContainer
+        data={timeSelected}
+        header={"Alter Time"}
+        fn={clearThisDay}
+        setTimeSelected={setTimeSelected}
+      />
+
       <Footer />
     </>
   );

@@ -2,18 +2,22 @@ import { Navigate, Outlet } from "react-router-dom";
 
 interface protectedRouteprops {
   // user: "user" | "coach";
-  user: "user" | "coach" | string;
+  user: "user" | "coach" | undefined;
   children: any;
   redirectPath: string;
   isAllowed: boolean;
+  accessibleRole: string | string[];
 }
 export const ProtectedRoute = ({
   user,
-  children,
   redirectPath,
   isAllowed,
+  children,
+  accessibleRole,
 }: protectedRouteprops) => {
-  if (user !== "coach") {
+  console.log("user local from route", user);
+
+  if (!accessibleRole.includes(user)) {
     return <Navigate to={redirectPath} replace />;
   }
   if (!isAllowed) {

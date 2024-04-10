@@ -1,23 +1,42 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import AddBtn from "./AddBtn";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { useSelector } from "react-redux";
-import { findLocalUser } from "../function";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetUserProfileQuery } from "../features/api/apiSlice";
+import { initialState } from ".././features/slices/userDataSlice";
+// import { findLocalUser } from "../function";
+const pages = [
+  { name: "Exerzise", path: "/home", icon: "../../public/logo1.jpg" },
+  { name: "About", path: "/about" },
+  { name: "Blog", path: "/blog" },
+  { name: "Coaches", path: "/coach" },
+  { name: "Classes", path: "/classes" },
+  { name: "Schedule", path: "/schedule" },
+];
 
 const Navbar = () => {
-  const globalUser = useSelector((state: any) => state.user);
-  const user = findLocalUser("user", globalUser);
+  // const user1 = useSelector((state: any) => state.user);
+  // const user = findLocalUser("user", globalUser);
+  // const token = JSON.parse(localStorage.getItem("token")!);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+  const [skip, setSkip] = useState(false);
 
-  const pages = [
-    { name: "Exerzise", path: "/home", icon: "../../public/logo1.jpg" },
-    { name: "About", path: "/about" },
-    { name: "Activities", path: "/activities" },
-    { name: "Schedule", path: "/schedule" },
-    { name: "Coaches", path: "/coach" },
-  ];
+  const { data: user, error, isLoading } = useGetUserProfileQuery(undefined); //coach data,
+  const [displayUser, setDisplayUser] = useState(initialState);
 
   const [nav, setNav] = useState(false);
+  useEffect(() => {
+    // setSkip(false);
+    // if (!token || user === undefined) {
+    //   setDisplayUser(initialState);
+    // } else {
+    //   setDisplayUser(user);
+    //   console.log("user", user);
+    // }
+    // console.log("displayUser", displayUser);
+  }, [user, token]);
 
   const handleNav = () => {
     setNav(!nav);
@@ -34,7 +53,7 @@ const Navbar = () => {
               isActive ? `activeL` : isPending ? "pending" : ""
             }
           >
-            <div className={`lg:px-10 ${el.path === "/home" && "mr-[100px]"}`}>
+            <div className={`lg:px-6 ${el.path === "/home" && "mr-[100px]"}`}>
               {el.icon ? (
                 <div className="text-3xl text-black">
                   {/* main-logo-container */}
@@ -57,12 +76,12 @@ const Navbar = () => {
             isActive ? "activeL" : isPending ? "pending" : ""
           }
         >
-          <div className=" lg:px-10 ">
+          <div className="lg:px-10">
             <img
               className="w-5 h-5"
-              src={user?.userImage}
-              alt={user?.username}
-            />{" "}
+              src={displayUser.userImage}
+              alt={displayUser.username}
+            />
           </div>
         </NavLink>
       </div>
@@ -82,7 +101,7 @@ const Navbar = () => {
         }
       >
         {/* Mobile Logo */}
-        <h1 className="w-full text-3xl font-bold text-[#E94823] m-4">
+        <h1 className="m-4 text-3xl font-bold text-[#E94823]">
           {<div>{pages[0].name}</div>}
         </h1>
         {/* Mobile Navigation Items */}
@@ -90,9 +109,9 @@ const Navbar = () => {
           .map((item, index) => (
             <li
               key={index}
-              className="p-4 border-b rounded-xl hover:bg-[#D8D8D8] duration-300 hover:text-black text-white cursor-pointer border-gray-600"
+              className="p-4 border-b border-gray-600 rounded-xl hover:bg-[#D8D8D8] duration-300 cursor-pointer "
             >
-              <Link to={item.path} id="none">
+              <Link to={item.path} id="moblienav">
                 {item.name}
               </Link>
             </li>
@@ -100,10 +119,10 @@ const Navbar = () => {
           .slice(1, 5)}
         <li
           key={13}
-          className="p-4 border-b rounded-xl hover:bg-[#D8D8D8] duration-300 hover:text-black text-white cursor-pointer border-gray-600"
+          className="p-4 border-b border-gray-600 rounded-xl hover:bg-[#D8D8D8] duration-300 cursor-pointer "
         >
-          <Link to={"/user"} id="none">
-            {user?.username}
+          <Link to={"/user"} id="moblienav">
+            {displayUser.username}
           </Link>
         </li>
       </ul>

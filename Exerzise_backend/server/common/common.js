@@ -26,10 +26,10 @@ const decryptPassword = async (pliainPassword, hash) => {
   }
 };
 
-const generateToken = async (userId) => {
+const generateToken = async (userData) => {
   try {
-    const token = jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "15m",
+    const token = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "30m",
     });
     return token;
   } catch (err) {
@@ -39,18 +39,24 @@ const generateToken = async (userId) => {
 
 const verifyToken = async (token) => {
   try {
-    const decodeToken = jwt.verify(
-      userId,
+    // console.log("token from verify", token);
+    const decodedToken = jwt.verify(
+      token,
       process.env.ACCESS_TOKEN_SECRET,
       (err, user) => {
+        // console.log("verify err=>", err);
         if (err) {
-          return res.status(403).send(`User ${user} dont have access`);
+          return {
+            isSuccess: false,
+            message: `user do not have access`,
+          };
+          // return res.status(403).send(`User ${user} dont have access`);
         }
-        console.log(decodeToken);
-        return decodeToken;
+        // console.log("success: user from jwt", user);
+        return user;
       }
     );
-    return decodeToken;
+    return decodedToken; //user from decoded
   } catch (err) {
     console.log(err);
   }

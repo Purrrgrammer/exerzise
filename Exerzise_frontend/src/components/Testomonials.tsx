@@ -21,28 +21,34 @@ const Testomonials = () => {
       role: "user",
       content:
         "Quis nisi enim reprehenderit sunt ex non consectetur nisi voluptate magna aute. Amet pariatur do veniam sit exercitation consequat occaecat elit sit ex. Mollit nulla cillum esse dolore minim adipisicing. Aute eiusmod deserunt sit sunt mollit voluptate labore tempor id consequat voluptate Lorem reprehenderit ullamco. ",
+      userImage:
+        "https://www.shareicon.net/data/2016/07/21/799353_user_512x512.png",
     },
     {
       user: "jackson jay2",
       role: "user2",
       content:
-        "2Quis nisi enim reprehenderit sunt ex non consectetur nisi voluptate magna aute. Amet pariatur do veniam sit exercitation consequat occaecat elit sit ex. Mollit nulla cillum esse dolore minim adipisicing. Aute eiusmod deserunt sit sunt mollit voluptate labore tempor id consequat voluptate Lorem reprehenderit ullamco. ",
+        "Aute ullamco adipisicing magna ullamco nostrud cupidatat aute ad eiusmod excepteur id fugiat.",
+      userImage:
+        "https://www.shareicon.net/data/2016/07/21/799323_user_512x512.png",
     },
     {
       user: "jackson jay3",
       role: "user3",
       content:
-        "2Quis nisi enim reprehenderit sunt ex non consectetur nisi voluptate magna aute. Amet pariatur do veniam sit exercitation consequat occaecat elit sit ex. Mollit nulla cillum esse dolore minim adipisicing. Aute eiusmod deserunt sit sunt mollit voluptate labore tempor id consequat voluptate Lorem reprehenderit ullamco. ",
+        "Amet pariatur do veniam sit exercitation consequat occaecat elit sit ex. Mollit nulla cillum esse dolore minim adipisicing. Aute eiusmod deserunt sit sunt mollit voluptate labore tempor id consequat voluptate Lorem reprehenderit ullamco. ",
+      userImage:
+        "https://www.shareicon.net/data/2016/07/21/799345_user_512x512.png",
     },
   ];
   const [val, setVal] = useState(0);
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl">Testomonials</h1>
-      <div className="my-10 relative flex p-10 border-solid border-8 border-indigo-600 bg-red-100 items-end h-[350px]">
+      <div className="my-10 relative flex p-10 border-solid border-8 border-[#D8D8D8] bg-red-100 items-end h-[350px]">
         <img
           className="h-[350px] hidden md:block"
-          src="https://img.freepik.com/free-photo/attractive-athlete-woman-isolated_144627-32713.jpg"
+          src={testomonials[val].userImage}
         />
 
         {/* content box */}

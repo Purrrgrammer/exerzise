@@ -12,7 +12,7 @@ const updateStatus = async (req, res) => {
     = '${input.status}' WHERE booking_id = $1`;
     const response = await pool.query(sql, [bookingId]);
     console.log("response", response);
-    responseData.message = "update complete";
+    responseData.message = `set bookingid ${bookingId} status as ${input.status}, completed!`;
   } catch (error) {
     responseData.success = false;
     console.log(error);

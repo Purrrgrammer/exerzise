@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { extendedType, userLoginResponse } from "../../interfaces";
 
-const initialState: userLoginResponse | string = {
+export const initialState: userLoginResponse = {
   detail: "defaultdetail",
-  firstName: "defaultfirstName",
+  firstname: "defaultfirstName",
   username: "defaultusername",
-  lastName: "defaultlastname",
-  role: "non-user",
+  lastname: "defaultlastname",
+  role: undefined,
   userId: "defaultuserId",
   userImage:
     "https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78=",
@@ -18,14 +18,19 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<extendedType>) => {
+    setUser: (
+      _state: any,
+      action: { payload: extendedType; type: string }
+    ): any | userLoginResponse => {
       localStorage.setItem("user", JSON.stringify(action.payload.data));
       localStorage.setItem("token", JSON.stringify(action.payload._token));
-      console.log("action.payload.data", action.payload.data);
-      state = action.payload;
+      console.log("set user success");
+
+      return action.payload.data;
     },
     logout: () => {
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       return initialState;
     },
   },

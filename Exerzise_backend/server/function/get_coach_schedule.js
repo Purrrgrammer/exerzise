@@ -60,17 +60,16 @@ const getCoachSchedule = async (req, res) => {
   const timeType = req.query.time;
   const dateQuery = req.query.date;
   const dayQuery = new Date(dateQuery).getDay();
+  let input = req.body;
+  console.log(input);
 
-  console.log(`XXXXXXXXXXXXXXXXXXX`);
-  console.log(`userId`, req.params.userId);
-  console.log(`dayQuery`, dayQuery);
-  console.log(`dateQuery`, dateQuery);
+  // console.log(`userId`, req.params.userId);
+  // console.log(`dayQuery`, dayQuery);
+  // console.log(`dateQuery`, dateQuery);
 
   const param = [req.params.userId, dayQuery, dateQuery];
   // console.log(`param`, param);
   try {
-    let input = req.body;
-    console.log(input);
     const response = await pool.query(
       `SELECT * FROM coachtime WHERE user_id = $1 AND day=$2`,
       [param[0], param[1]]
@@ -90,8 +89,8 @@ const getCoachSchedule = async (req, res) => {
     // console.log("response", response);
     // console.log("param[1]", param[1]);
     let generatedIntervals = generateTimeIntervals(responseData.data, timeType); // 30 or 60;
-    console.log("all coach generatedIntervals", generatedIntervals);
-    console.log("param1", param[1]);
+    // console.log("all coach generatedIntervals", generatedIntervals);
+    // console.log("param1", param[1]);
     const bookedresponse = (
       await pool.query(`SELECT * FROM bookings WHERE date = $1`, [param[2]])
     ).rows;
@@ -104,7 +103,7 @@ const getCoachSchedule = async (req, res) => {
     // console.log("availableIntervals", availableIntervals);
     // console.log(`generateTimeIntervals`, generatedIntervals);
 
-    // responses
+    // RESPONSES
     responseData.data = response.rows;
     responseData.bookedresponse = bookedresponse;
     responseData.availableTime = availableIntervals ? availableIntervals : [];

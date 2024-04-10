@@ -18,9 +18,9 @@ export interface loginResponse {
 
 export interface userLoginResponse {
   username: string;
-  firstName: string;
-  lastName: string;
-  role: "coach" | "user" | "non-user";
+  firstname: string;
+  lastname: string;
+  role: "coach" | "user" | undefined;
   userId: string;
   userImage: string;
   detail: string;
@@ -98,9 +98,29 @@ export type coachDataType = {
   phonenumber: string;
   role: string;
   session: string;
-  userImg: string;
+  userImage: string;
   username: string;
   bg?: string;
-  rating: number;
+  averageRating: number;
   ratingCount: number;
+};
+
+export type updateCommentType = {
+  bookingId: string;
+  data: updateBookingReqType;
+};
+
+export type updateBookingReqType = {
+  comment: string;
+  rating: number;
+};
+export type reactPopupType = {
+  show: boolean;
+  thisBooking: string;
+  bookingId: string;
+  starValue: number | null | undefined;
+  commentText: string | null | undefined;
+  setStarValue: any;
+  updateComment: any;
+  setCommentText: any;
 };

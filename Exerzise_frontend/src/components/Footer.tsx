@@ -28,14 +28,14 @@ const Footer = () => {
     },
   ];
   return (
-    <div className="h-[300px] w-full bg-slate-500 mt-4 p-4 bottom-[0%] ">
+    <div className="h-[300px] w-full bg-[#D8D8D8] mt-4 p-4 bottom-[0%] ">
       <div className="flex justify-center gap-x-10 m-8 ">
         <div className="flex flex-col gap-y-4 ">
-          <h1 className="text-4xl">EXERZISE</h1>
-          <div className="">
+          <b className="text-4xl text-[#E94823]">EXERZISE</b>
+          <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore
             facilis, inventore facere dicta voluptatum.
-          </div>
+          </p>
           <div className="flex gap-x-3">
             {links.map((el, index) => (
               <img
@@ -45,6 +45,7 @@ const Footer = () => {
               />
             ))}
           </div>
+          Privacy Policy | © 2024 Exerzise
         </div>
         <div className="flex gap-x-10">
           {section.map((el, index) => (

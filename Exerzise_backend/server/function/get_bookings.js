@@ -4,21 +4,26 @@ const common = require("../common/common");
 const getBookings = async (req, res) => {
   let responseData = {};
   const userId = req.params.userId;
-
-  console.log(`param userId`, userId);
+  console.log(`param userId?`, userId);
+  const allDone = req.params.allDone;
+  console.log(`param allDone?`, allDone);
   try {
     //get by params
-    let input = req.body;
-    console.log(input);
-    const response = await pool.query(
+    const doneResponse = await pool.query(
       `SELECT * FROM bookings LEFT JOIN 
-      users on bookings.coach_id = users.user_id WHERE bookings.user_id = $1`,
+      users on bookings.coach_id = users.user_id WHERE bookings.user_id = $1 and (coach_status = 'done' and user_status = 'done')`,
       [userId]
     );
-
-    console.log("response", response);
+    const response = await pool.query(
+      `SELECT * FROM bookings LEFT JOIN 
+      users on bookings.coach_id = users.user_id WHERE bookings.user_id = $1 and (NOT coach_status = 'done' or NOT user_status = 'done') `,
+      [userId]
+    );
+    //
     responseData.success = true;
-    responseData.data = response.rows.map((i) => ({
+    responseData.data = (
+      /true/.test(allDone) === true ? doneResponse : response
+    ).rows.map((i) => ({
       bookingId: i.booking_id,
       date: i.date,
       day: i.day,

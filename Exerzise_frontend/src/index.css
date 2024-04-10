@@ -26,10 +26,16 @@ html {
   justify-content: center;
   align-items: center; */
 }
-
 .nav a:hover {
   color: black;
   background-color: #d8d8d8;
+}
+#moblienav {
+  color: white;
+  padding: 16px;
+}
+#moblienav:hover {
+  background-color: none;
 }
 .nav a.activeL {
   color: black;
@@ -92,7 +98,6 @@ html {
 }
 .cover-container {
   width: 100vw;
-  height: 700px;
   overflow: hidden;
 }
 .cover {
@@ -103,7 +108,6 @@ html {
 .cover-header {
   position: absolute;
   color: white;
-  font-size: 10rem;
   top: 35%;
   left: 35%;
   z-index: 10;
@@ -123,12 +127,10 @@ html {
 }
 .body1 {
   background-image: url("https://images.squarespace-cdn.com/content/v1/5a5fef62a9db0982c2cfdf44/1521131262182-FFIIB0WJWMKU4FXAUIDE/Sports-Training-Banner.jpg?format=1500w");
-  height: 500px;
   color: white;
 }
 .body1 {
   /* background-image: url("https://images.squarespace-cdn.com/content/v1/5a5fef62a9db0982c2cfdf44/1521131262182-FFIIB0WJWMKU4FXAUIDE/Sports-Training-Banner.jpg?format=1500w"); */
-  height: 500px;
   color: white;
   background-color: #ffffff;
 }
@@ -141,12 +143,9 @@ html {
 .img-container {
   overflow: hidden;
   height: 100%;
-  width: 100%;
 }
 .grid-text {
-  padding: 100px;
-  height: 100%;
-  width: 100%;
+  padding: 50px 30px;
   background: #d8d8d8;
 }
 
@@ -189,6 +188,6 @@ html {
   cursor: pointer;
 }
 
-#none {
-  color: white;
-}
+/* input[type="file"] {
+  display: none;
+} */

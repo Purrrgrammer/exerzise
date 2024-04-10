@@ -6,6 +6,7 @@ export const JustAButton = ({ name }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
   return (
     <button
       onClick={() => {

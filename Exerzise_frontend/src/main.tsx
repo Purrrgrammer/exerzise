@@ -8,7 +8,7 @@ import ActivitiesPage from "./pages/ActivitiesPage";
 import UserPage from "./pages/UserPage";
 import CoachDetail from "./pages/CoachDetail";
 import ScheduleDetailPage from "./pages/ScheduleDetailPage";
-import Blog from "./pages/Blog";
+import Blog from "./pages/BlogPage";
 import BlogDetail from "./pages/BlogDetail";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import App from "./App";
@@ -19,6 +19,13 @@ import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { apiSlice, bookingApi } from "./features/api/apiSlice";
 import { ProtectedRoute } from "./pages/ProtectedRoute";
 import CoachSchedule from "./pages/CoachSchedule";
+import { userLoginResponse } from "./interfaces";
+import ClassPage from "./pages/ClassPage";
+
+const userlocal = localStorage.getItem("user");
+const user = userlocal
+  ? (JSON.parse(userlocal) as userLoginResponse)
+  : undefined;
 
 const coachRouter = createBrowserRouter([
   {
@@ -48,44 +55,60 @@ const coachRouter = createBrowserRouter([
     element: <CoachPage />,
   },
   {
-    path: "activities",
-    element: <ActivitiesPage />,
-  },
-  {
-    path: "user",
-    element: <UserPage />,
-  },
-  {
     path: "coach/:coachId",
     element: <CoachDetail />,
-  },
-  {
-    path: "blog",
-    element: (
-      <ProtectedRoute
-        user={localStorage.getItem("user")! && "coach"}
-        isAllowed={true}
-        redirectPath={"/"}
-      >
-        <Blog />
-      </ProtectedRoute>
-    ),
   },
   {
     path: "coach/schedule",
     element: (
       <ProtectedRoute
-        user={localStorage.getItem("user")! && "coach"}
+        user={"coach"}
         isAllowed={true}
         redirectPath={"/"}
+        accessibleRole="coach"
       >
         <CoachSchedule />
       </ProtectedRoute>
     ),
   },
   {
+    path: "activities",
+    element: <ActivitiesPage />,
+  },
+  {
+    path: "user",
+    element: (
+      <ProtectedRoute
+        user={user ? user.role : undefined}
+        isAllowed={true}
+        redirectPath={"/"}
+        accessibleRole={["user", "coach"]}
+      >
+        <UserPage />
+      </ProtectedRoute>
+    ),
+    // element: <UserPage />,
+  },
+  {
+    path: "blog",
+    element: (
+      <ProtectedRoute
+        user={user ? user.role : undefined}
+        isAllowed={true}
+        redirectPath={"/"}
+        accessibleRole={["user", "coach"]}
+      >
+        <Blog />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "blog/:blogId",
     element: <BlogDetail />,
+  },
+  {
+    path: "classes",
+    element: <ClassPage />,
   },
 ]);
 const commonRouter = createBrowserRouter([
@@ -114,10 +137,6 @@ const commonRouter = createBrowserRouter([
   {
     path: "coach",
     element: <CoachPage />,
-  },
-  {
-    path: "activities",
-    element: <ActivitiesPage />,
   },
   {
     path: "user",

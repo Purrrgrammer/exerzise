@@ -1,8 +1,9 @@
 import React from "react";
+import Bars from "./Bars";
 
 const Body1 = () => {
   return (
-    <div className="body1 flex items-center justify-center ">
+    <div className="body1 flex items-center justify-center static md:relative md:mt-[150px]">
       <div className="text-header ms-10 me-10">
         Magna aliqua commodo ex culpa consequat incididunt
       </div>
@@ -28,3 +29,13 @@ const Body1 = () => {
 };
 
 export default Body1;
+{
+  /* <div className="md:mt-[150px] relative">
+        <div className="static md:absolute -top-[250px] ">
+          <Bars />
+        </div>
+        <div>
+          <Body1 />
+        </div>
+</div>*/
+}

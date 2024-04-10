@@ -1,17 +1,23 @@
-const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers["Autorization"];
-  const token = authHeader && authHeader.split("")[1];
+const common = require("../common/common");
+
+const verifyAuthToken = async (req, res, next) => {
+  // console.log("req.headers", req.headers);
+  const authHeader = req.headers["authorization"];
+  // console.log("authHeader", authHeader);
+  const token = authHeader && authHeader.split(" ")[1];
   if (token == null) {
-    console.log("need authh");
-    return res.status(403).send("Token is required");
+    return res.status(403).send("Token is required || Need Auth");
   }
   try {
-    const result = await common.tokenExc.verifyToken(token);
-    req._user = result;
+    const userAuthResult = await common.tokenExc.verifyToken(token);
+    if (userAuthResult.isSuccess === false) {
+      return res.status(403).send(userAuthResult.message);
+    }
+    req._user = userAuthResult;
   } catch (err) {
-    console.log(err);
+    console.log("error", err);
   }
   next();
 };
 
-module.exports = verifyToken;
+module.exports = verifyAuthToken;

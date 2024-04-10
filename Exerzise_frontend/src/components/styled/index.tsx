@@ -43,8 +43,8 @@ export const StyleForm = styled.form`
 export const Input = ({
   inputRef,
   id,
-  type = "text",
   placeholder,
+  type = "text",
   label = "label",
   formValue,
   setFormvalue,

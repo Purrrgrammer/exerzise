@@ -17,8 +17,8 @@ const Benefits = () => {
   ];
   return (
     <>
-      <div className="flex flex-col my-10 items-center justify-center gap-y-2 ">
-        <div>Benefits</div>
+      <div className="flex flex-col items-center justify-center gap-y-2 ">
+        <h1 className="text-2xl">Benfits</h1>
         <div className="w-[700px] text-center">
           Reprehenderit proident ut consequat labore officia tempor officia id
           minim laboris in duis ex pariatur. Commodo officia laboris velit dolor

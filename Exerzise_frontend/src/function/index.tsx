@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { dayNames } from "../base";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 
 export const getInitialFormObjects = (formArr: any) => {
   //get initail value
@@ -57,15 +58,6 @@ export const getDateinWeeks = (param) => {
   return currentDate;
 };
 
-// const today = new Date();
-// const tomorrow = new Date(today);
-// let dynamicDay = new Date(today);
-// dynamicDay = tomorrow;
-// const ThisDay = dayNames.find(
-//   (el) => dayNames.indexOf(el) === dynamicDay.getDay()
-// );
-// const [newTimeSelected, setNewTimeSelected] = useState(tomorrow);
-// Generate Time
 
 export const removeObjectValueDupe = (arr, key) => {
   // key
@@ -80,5 +72,25 @@ export const findLocalUser = (user: string, globalUser: any) => {
     return JSON.parse(localStorage.getItem(user)!);
   } else {
     return globalUser;
+  }
+};
+
+//filter seearch
+
+export const filterSearch = (target, str, session) => {
+  if (target !== undefined) {
+    return target.filter((item) => {
+      const fullName =
+        item.firstname.toLowerCase() + " " + item.lastname.toLowerCase();
+      if (fullName.includes(str.toLowerCase())) {
+        // console.log("items", item);
+        // console.log("session", session);
+        if (session === "all") {
+          return item;
+        } else {
+          return item.session === session;
+        }
+      }
+    });
   }
 };

@@ -26,8 +26,8 @@ const DayPicker = ({ setCurrentDay, currentDay, setDayAdded, currentDate }) => {
         setCurrentDay(0);
       }
     }
-    console.log("currentDay", currentDay);
-    console.log("thisDate", currentDate);
+    // console.log("currentDay", currentDay);
+    // console.log("thisDate", currentDate);
   };
   return (
     <div>

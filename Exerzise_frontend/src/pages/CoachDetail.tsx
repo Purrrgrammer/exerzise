@@ -6,7 +6,7 @@ import {
   convertByTimeType,
   getOverlappingMinutes,
 } from "../function/extend_index";
-import DayPicker from "../components/dayPicker";
+import DayPicker from "../components/DayPicker";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import {
@@ -33,7 +33,6 @@ const CoachDetail = () => {
     },
   ];
   const [postBookings, bookingResult] = usePostBookingsMutation();
-
   const [dayAdded, setDayAdded] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -54,9 +53,9 @@ const CoachDetail = () => {
     // .format("L")
   });
   const [displayData, setDisplayData] = useState(
-    coachSceduleData?.availableTime || defaultData
+    coachSceduleData?.availableTime || null
   );
-  // console.log("coach detail data", data);
+  console.log("coach detail data", data);
 
   useEffect(() => {
     if (coachSceduleData) {
@@ -89,26 +88,28 @@ const CoachDetail = () => {
         coachId: coachId,
       })
         .unwrap()
-        .then((fullfilled) => {
+        .then((bookingResponse) => {
           toast.promise(resolveAfter3Sec, {
             pending: "We are booking, please wait",
-            success: "Successfully booked👌",
+            success: bookingResponse.message,
             error: "the Booking(s) has been rejected 🤯",
           });
+          // return; // setTimeout(() => {
+          //   window.location.reload();
+          // }, 5000);
         })
+
         .catch((reject) => {
           toast.error(reject.data.message);
         });
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 5000);
     } else toast.warn("there is emthy bookings");
   };
-
   const timeSelectHandler = (time: string) => {
     setUserChose((prev) => {
       const { session } = data[0];
-      const { userId } = JSON.parse(localStorage.getItem("user")!);
+      const { userId } = localStorage.getItem("user")!
+        ? JSON.parse(localStorage.getItem("user")!)
+        : " ";
       const newTimeSelected: forUserBookingType = {
         date: currentDate,
         day: currentDay,
@@ -156,10 +157,8 @@ const CoachDetail = () => {
     <>
       <Navbar />
       <AlertBox />
-      <div className="">{coachId}</div>
-
-      <div className="flex justify-center">
-        <CoachCard coachData={data ? data : defaultData} />
+      <div className="flex justify-center my-10">
+        <CoachCard coachData={data ? data : null} />
         <div>
           <DayPicker
             currentDate={currentDate}
@@ -218,7 +217,7 @@ const CoachDetail = () => {
                 onClick={() => {
                   setUserChose([]);
                   setDisplayData(coachSceduleData.availableTime);
-                  toast.success("Cleared Bookings!");
+                  toast.success("Bookings Cleared!");
                 }}
               />
             </div>

@@ -6,7 +6,6 @@ const ActivitiesPage = () => {
   return (
     <>
       <Navbar />
-      <ActivitiesBox />
       <Footer />
     </>
   );

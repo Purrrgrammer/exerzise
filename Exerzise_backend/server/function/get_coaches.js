@@ -2,13 +2,15 @@ const pool = require("../db/pool");
 
 const getCoaches = async (req, res) => {
   let responseData = {};
+  // console.log("user req detail to get coaches", req._user);
   try {
-    let data = req.body;
-    console.log(data);
+    // console.log(data);
     const response = await pool.query(
-      `SELECT * FROM users WHERE (role = 'coach');`
+      `SELECT u.username,u.user_id,first_name,last_name,detail,user_image,u.phone_number ,u.session,coalesce(sum(b.rating)/count(b.rating)) as average_rating,count(b.rating) as done_count 
+FROM users u left join bookings b on u.user_id = b.coach_id WHERE (role = 'coach')
+group by u.user_id`
     );
-    console.log("response", response);
+    // console.log("response", response);
     responseData.success = true;
     responseData.data = response.rows.map((i) => ({
       userId: i.user_id,
@@ -19,13 +21,13 @@ const getCoaches = async (req, res) => {
       session: i.session,
       detail: i.detail,
       phonenumber: i.phone_number,
-      userImg: i.user_image,
-      rating: i.rating,
-      ratingCount: i.rating_count,
+      userImage: i.user_image,
+      averageRating: i.average_rating,
+      ratingCount: i.done_count,
     }));
   } catch (error) {
     responseData.success = false;
-    console.log(error);
+    console.log("error", error);
   } finally {
   }
   res.status(200).send(responseData); //success

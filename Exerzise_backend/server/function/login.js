@@ -3,18 +3,25 @@ const common = require("../common/common");
 
 const login = async (req, res) => {
   let responseData = {};
+  let input = req.body;
+  console.log(`input`, input);
+
   try {
-    let input = req.body;
-    console.log(`input`, input);
     let findUser = `SELECT * FROM public.users WHERE username = $1;`;
     let userParam = [input.username];
     const serverResponse = await pool.query(findUser, userParam);
+    // if (serverResponse.rows.length === 0) {
+    //   responseData.success = false;
+    //   responseData.message = "user not found case1 l";
+    //   return res.status(403).send(responseData); //success
+    // }
     console.log("serverResponse.password", serverResponse.rows[0].password);
     console.log("input.password", input.password);
     if (serverResponse.rowCount < 1) {
       // user not found
-      responseData.message = "user not found";
       responseData.success = false;
+      responseData.message = "User is not found";
+      return res.status(403).send(responseData); //success
     } else {
       console.log("user found");
       const decryptedPassword = await common.passwordExc.decryptPassword(
@@ -27,8 +34,9 @@ const login = async (req, res) => {
       if (!decryptedPassword) {
         //password is not matched
         console.log("password not matched");
-        responseData.message = "password is not matched";
         responseData.success = false;
+        responseData.message = "Password is not matched";
+        return res.status(403).send(responseData); //success
       } else {
         //password matched login cleared
         console.log("password matched");
@@ -44,19 +52,21 @@ const login = async (req, res) => {
           phonenumber: i.phone_number,
         }))[0];
         responseData.success = true;
-        responseData._token = await common.tokenExc.generateToken({
-          responseData,
-        });
-        responseData.message = "successfully logged in";
+        responseData.message = "Successfully logged in";
+        responseData._token = await common.tokenExc.generateToken(
+          responseData.data
+        );
+          return res.status(200).send(responseData); //success
       }
     }
   } catch (error) {
     responseData.success = false;
     responseData.message = "something wrong please try again";
     console.log(error);
+    return res.status(500).send(responseData); //success
   } finally {
   }
-  res.status(200).send(responseData); //success
+  // res.status(200).send(responseData); //success
 };
 
 module.exports = login;
