@@ -1,7 +1,7 @@
 const pool = require("../db/pool");
 const common = require("../common/common");
 
-const getBookings = async (req, res) => {
+const getUserBookings = async (req, res) => {
   let responseData = {};
   const userId = req.params.userId;
   console.log(`param userId?`, userId);
@@ -28,8 +28,8 @@ const getBookings = async (req, res) => {
       date: i.date,
       day: i.day,
       price: parseInt(i.price),
-      timeTo: i.time_to,
       timeFrom: i.time_from,
+      timeTo: i.time_to,
       session: i.session, //joinable
       typeTime: i.type_time,
       userStatus: i.user_status,
@@ -42,20 +42,22 @@ const getBookings = async (req, res) => {
       coachPhoneNumber: i.phone_number, //joinable
       coachFirstName: i.first_name, //joinable
       coachLastName: i.last_name, //joinable
-      coachImage: i.user_image, //joinable
+      coachImage: `http://localhost:5000/images/${i.user_image}`, //joinable
       // from joined table data to coach
       userId: userId,
       // userphonenumber
       // userfirstname
       // userlastname
     }));
+    res.status(200).send(responseData); //success
   } catch (error) {
     responseData.success = false;
+    responseData.message = "something wrong on get schedule";
     console.log(error);
+    res.status(500).send(responseData); //success
   } finally {
   }
-  res.status(200).send(responseData); //success
   return res.end();
 };
 
-module.exports = getBookings;
+module.exports = getUserBookings;

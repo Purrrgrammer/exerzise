@@ -21,9 +21,10 @@ group by u.user_id`
       session: i.session,
       detail: i.detail,
       phonenumber: i.phone_number,
-      userImage: i.user_image,
-      averageRating: i.average_rating,
+      userImage: `http://localhost:5000/images/${i.user_image}`,
+      rating: i.rating,
       ratingCount: i.done_count,
+      averageRating: parseInt(i.average_rating),
     }));
   } catch (error) {
     responseData.success = false;

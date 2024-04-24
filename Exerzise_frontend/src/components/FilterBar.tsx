@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { FilterBarPropType } from "../interfaces/propTypes";
 
-const FilterBar = ({ filterState, setFilterState }) => {
+const FilterBar = ({ filterState, setFilterState }: FilterBarPropType) => {
   // const [filterState, setFilterState] = useState("all");
 
   const sessions = [

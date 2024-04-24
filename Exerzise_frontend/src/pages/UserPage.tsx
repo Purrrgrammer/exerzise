@@ -1,44 +1,33 @@
-import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import SideBar from "../components/styled/SideBar";
-import { useEffect, useState } from "react";
+import SideBar from "../components/SideBar";
+import { useState } from "react";
 import List from "../components/List";
-import { findLocalUser } from "../function";
-import { useGetUserProfileQuery } from "../features/api/apiSlice";
-import { initialState } from ".././features/slices/userDataSlice";
+import { useAppSelector } from "../store";
 
 const UserPage = () => {
   // const user = findLocalUser("user", globalUser);
-  const token = JSON.parse(localStorage.getItem("token")!);
-  const { data: user, error, isLoading } = useGetUserProfileQuery(null); //coach data
-  const [content, setContent] = useState("profile");
-  const [displayUser, setDisplayUser] = useState(initialState);
-  let renderedcontent;
   // console.log("logged in user", user);
   // console.log("d user", initialState);
 
-  useEffect(() => {
-    if (user?.isSuccess !== false && !isLoading && user !== undefined) {
-      setDisplayUser(user);
-    } else {
-      setDisplayUser(initialState);
-    }
-  }, [user]);
+  const user = useAppSelector((state) => state.user);
+
+  const [content, setContent] = useState<string>("profile");
+  let renderedcontent;
 
   switch (content) {
     case "profile":
-      renderedcontent = isLoading ? (
-        "loading"
-      ) : (
+      renderedcontent = (
         <div className="text-xl">
-          <div>username: {displayUser.username}</div>
-          <div>
-            full name: {displayUser.firstname + "  " + displayUser.lastname}
+          <div>username: {user.username}</div>
+          <div>full name: {user.firstname + "  " + user.lastname}</div>
+          <div>ID: {user.userId}</div>
+          <div>role: {user.role}</div>
+          <div>bio: {user.detail}</div>
+          <div className="flex flex-col gap-x-3">
+            <label htmlFor="">edit your bio</label>
+            <input className="p-2"></input>
           </div>
-          <div>ID: {displayUser.userId}</div>
-          <div>role: {displayUser.role}</div>
-          <div>bio: {displayUser.detail}</div>
         </div>
       );
       break;

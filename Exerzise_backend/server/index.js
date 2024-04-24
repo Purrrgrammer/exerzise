@@ -1,20 +1,20 @@
 const express = require("express");
 const app = express();
 const PORT = 5000;
+const bodyParser = require("body-parser");
 const getUser = require("./function/getusers");
+const cors = require("cors");
 const register = require("./function/register");
 const getCoaches = require("./function/get_coaches");
 const login = require("./function/login");
-const bodyParser = require("body-parser");
 const getCoach = require("./function/get_coach");
-const setCoachTime = require("./function/coach_schedule");
+const setCoachSchedule = require("./function/set_coach_schedule");
 const bookCoachTime = require("./function/book_coach_time");
 const getCoachSchedule = require("./function/get_coach_schedule");
-const getBookings = require("./function/get_bookings");
+const getUserBookings = require("./function/get_bookings");
 const getCoachTime = require("./function/get_coach_time");
 const updateStatus = require("./function/status_update");
 const postComment = require("./function/post_comment");
-const cors = require("cors");
 const verifyAuthToken = require("./middleware/auth");
 const getUserProfile = require("./function/get_user_profile");
 const deleteSchedule = require("./function/delete_coach_schedule");
@@ -58,7 +58,7 @@ app.get("/user/all", verifyAuthToken, async (req, res) => {
 });
 //coach only
 app.post("/coach/schedule/:coachId", verifyAuthToken, async (req, res) => {
-  setCoachTime(req, res);
+  setCoachSchedule(req, res);
 });
 //user only
 app.post("/coach/:coachId", verifyAuthToken, async (req, res) => {
@@ -67,14 +67,15 @@ app.post("/coach/:coachId", verifyAuthToken, async (req, res) => {
 app.get("/coach/:userId", verifyAuthToken, async (req, res) => {
   getCoach(req, res); //by ID
 });
+app.get("/coachschedule/:coachId", verifyAuthToken, async (req, res) => {
+  getCoachSchedule(req, res);
+});
 app.get("/coaches", verifyAuthToken, async (req, res) => {
   getCoaches(req, res);
 });
-app.get("/coachschedule/:userId", verifyAuthToken, async (req, res) => {
-  getCoachSchedule(req, res);
-});
+
 app.get("/schedule/:userId/:allDone", verifyAuthToken, async (req, res) => {
-  getBookings(req, res);
+  getUserBookings(req, res);
 });
 // booking updating
 app.put("/schedule/:bookingId", verifyAuthToken, async (req, res) => {

@@ -1,33 +1,15 @@
 import { PriceRange, TimeRange } from "../interfaces";
 
-// Response form bookingTime where date = 22/12/2024 and userId = xx
-let bookingTime = [
-  {
-    start: "16:00",
-    typeTime: 30,
-  },
-  {
-    start: "23:00",
-    typeTime: 30,
-  },
-];
-
-// Response form coachingTime where Day = 6 and userId = xx
-let timeRanges = [
-  {
-    date: 6,
-    start: "16:00",
-    end: "20:00",
-  },
-  {
-    date: 6,
-    start: "22:00",
-    end: "24:00",
-  },
-];
-
-export function generateTimeIntervals(timeRanges, typeTime) {
-  let result: any = [];
+type timeRangesType = {
+  start: string;
+  end: string;
+  typeTime: number;
+};
+export function generateTimeIntervals(
+  timeRanges: timeRangesType[],
+  typeTime: number
+) {
+  let result: string[] = [];
 
   timeRanges.forEach((range) => {
     let startTime = parseTime(range.start);
@@ -40,8 +22,11 @@ export function generateTimeIntervals(timeRanges, typeTime) {
   return result;
 }
 
-export function removeBookingTimes(timeIntervals, bookingTime) {
-  let bookingTimes: any = [];
+export function removeBookingTimes(
+  timeIntervals: string[],
+  bookingTime: timeRangesType[]
+) {
+  let bookingTimes: string[] = [];
 
   bookingTime.forEach((booking) => {
     let startTime = parseTime(booking.start);
@@ -57,43 +42,42 @@ export function removeBookingTimes(timeIntervals, bookingTime) {
 }
 
 // Helper functions
-function parseTime(timeStr) {
+function parseTime(timeStr: string) {
   let [hours, minutes] = timeStr.split(":").map(Number);
   let date = new Date();
   date.setHours(hours, minutes, 0, 0); // set hours and minutes, reset seconds and milliseconds
   return date;
 }
 
-function formatTime(date) {
+function formatTime(date: Date) {
   let hours = date.getHours().toString().padStart(2, "0");
   let minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 }
 
 // create all free time by 30 minutes
-let generatedIntervals = generateTimeIntervals(timeRanges, 30); // 30 or 60;
+// let generatedIntervals = generateTimeIntervals(timeRanges, 30); // 30 or 60;
 // console.log("generatedIntervals", generatedIntervals);
 
 // create all free is time and filter by booking Time
-let availableIntervals = removeBookingTimes(generatedIntervals, bookingTime);
+// let availableIntervals = removeBookingTimes(generatedIntervals, bookingTime);
 // console.log("availableIntervals", availableIntervals);
 
-export const convertByTimeType = (input, timeType) => {
+export const convertByTimeType = (input: string, timeType: number) => {
   //convert to + 30 mins
-  let front = input[0] + input[1];
-  let back = input[3] + input[4];
+  let front: string = input[0] + input[1];
+  let back: string = input[3] + input[4];
   if (timeType === 30) {
     if (back === "00") {
       back = "30";
     } else {
-      front = parseInt(front) + 1;
+      front = `${parseInt(front) + 1}`;
       back = "00";
     }
   }
-  if (front === 24 || front === "24") {
+  if (parseInt(front) === 24 || front === "24") {
     front = "00";
   }
-
   return `${front}:${back}`;
 };
 

@@ -1,22 +1,20 @@
-import { useSelector } from "react-redux";
-import { JustAButton } from "../regular";
-import { findLocalUser } from "../../function";
-import {
-  useGetUserProfileQuery,
-  useUploadMutation,
-} from "../../features/api/apiSlice";
-import { initialState } from "../../features/slices/userDataSlice";
-import { useEffect, useState } from "react";
-import CommonBtn from "../CommonBtn";
+import { JustAButton } from "./regular";
+import { useUploadMutation } from "../features/api/apiSlice";
+import { useState } from "react";
 import Popup from "reactjs-popup";
+import { useAppSelector } from "../store";
+import { SideBarPropsType } from "../interfaces/propTypes";
 
-const SideBar = ({ setContent }) => {
-  // const user = useSelector((state: any) => state.user);
+const SideBar = ({ setContent }: SideBarPropsType) => {
   // const user = findLocalUser("user", globalUser);
-  const token = JSON.parse(localStorage.getItem("token")!);
-  const [displayUser, setDisplayUser] = useState(initialState);
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+  const user = useAppSelector((state) => state.user);
+
+  // const token = useAppSelector((state) => state.token);
+  // const [displayUser, setDisplayUser] = useState(initialState);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | undefined>(
+    undefined
+  );
 
   const [upup] = useUploadMutation();
   const upload = () => {
@@ -36,21 +34,15 @@ const SideBar = ({ setContent }) => {
       });
     // upup({ userId, imageFile });
   };
-  const { data: user, error, isLoading } = useGetUserProfileQuery(null); //coach data
+
+  // const { data: user, error, isLoading } = useGetUserProfileQuery(null); //coach data
   const link = [{ name: "profile" }, { name: "history" }, { name: "favorite" }];
-  useEffect(() => {
-    if (user === undefined) {
-      setDisplayUser(initialState);
-    } else {
-      setDisplayUser(user);
-    }
-    console.log("sidebar displayUser user ", displayUser);
-  }, [user]);
+
   return (
     <div className="h-screen w-[200px] bg-red-200 p-4 flex flex-col items-center">
       <div className="my-4 relative">
         <img
-          src={displayUser.userImage}
+          src={user.userImage}
           alt=""
           className="w-[100px] h-[100px] rounded-full object-cover "
         />
@@ -70,6 +62,10 @@ const SideBar = ({ setContent }) => {
               name="button2"
               id="button2"
               onChange={(e) => {
+                if (!e.target.files || e.target.files.length === 0) {
+                  console.error("Select a file");
+                  return;
+                }
                 const file = e.target.files[0];
                 // console.log("target file ", file);
                 // setImageFile(file);
@@ -78,7 +74,7 @@ const SideBar = ({ setContent }) => {
                 reader.onloadend = () => {
                   console.log(`setting new file`);
                   setImageFile(file);
-                  setImagePreviewUrl(reader.result);
+                  setImagePreviewUrl(reader.result as string);
                   console.log(`setting done`);
                   console.log(`new file is set`, imageFile);
                 };

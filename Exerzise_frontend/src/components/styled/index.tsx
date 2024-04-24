@@ -1,6 +1,7 @@
 import { SetStateAction, useState } from "react";
 import styled from "styled-components";
 import "../Form/Form.css";
+import { InputFromType } from "../../interfaces";
 
 export const StyledDiv = styled.div`
   display: inline-flex;
@@ -39,19 +40,19 @@ export const StyleForm = styled.form`
   margin-top: 5%;
   background-color: #e94823;
 `;
-
+// Styled Input
 export const Input = ({
-  inputRef,
   id,
+  // inputRef,
   placeholder,
-  type = "text",
   label = "label",
+  type = "text",
   formValue,
   setFormvalue,
-}: any) => {
+}: InputFromType) => {
   const [activeRole, setActiveRole] = useState("user");
   const roleValue = [{ name: "user" }, { name: "coach" }];
-  const [_value, setValue] = useState("");
+  // const [_value, _setValue] = useState("");
 
   const onSearchChange = (e: { target: { value: SetStateAction<string> } }) => {
     setFormvalue({ ...formValue, [id]: e.target.value }); // from use side
@@ -91,7 +92,6 @@ export const Input = ({
         </div>
       ) : (
         <input
-          ref={inputRef}
           className="mx-1"
           id={id}
           type={type}

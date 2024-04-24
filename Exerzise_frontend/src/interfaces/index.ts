@@ -1,22 +1,76 @@
+import { MutableRefObject } from "react";
+
 // userResponse when logged in
-export interface extendedType extends userLoginResponse {
-  data: loginResponse | string;
-  _token: tokenResponse;
-  payload: extendedType;
+export interface ExtendType extends UserLoginResponse {
+  data: LoginResponse;
+  _token: TokenResponse;
+  payload: ExtendType;
 }
-export interface serverResponseType {
-  data: userLoginResponse;
+export interface ServerResponseType {
+  data: UserLoginResponse;
   _token: string;
   success: boolean;
+  message: string;
+}
+export interface PostBookingPayloadType {
+  userId: string;
+  coachId: string;
+  date: string;
+  timeFrom: string;
+  timeTo: string;
+  day: number;
+  session: string | null;
+  price: number;
+  userStatus: string;
+  coachStatus: string;
+  rating: null;
+  comment: null;
+  payment: null;
+  typetime: 30;
 }
 
-export interface loginResponse {
-  data: userLoginResponse;
+export interface InputFromType {
+  id: string;
+  placeholder: string;
+  type: string | undefined;
+  label: string;
+  formValue: FormArrType;
+  setFormvalue: React.Dispatch<React.SetStateAction<FormArrType>>;
+  inputRef?:
+    | string
+    | MutableRefObject<
+        MutableRefObject<HTMLInputElement | undefined> | undefined
+      >;
+}
+export interface LoginResponse {
+  data: UserLoginResponse;
   _token: string | null;
   success: boolean;
 }
-
-export interface userLoginResponse {
+export interface RegisterFormValueType {
+  name: string;
+  label: string;
+  placeholder: string;
+  type?: string;
+}
+export interface FormArrType {
+  username?: string;
+  password?: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  phonenumber?: string;
+  role?: string;
+}
+export interface LoginFormValueType {
+  name: string;
+  label: string;
+  placeholder: string;
+  type?: string;
+  role?: string;
+  initial?: string;
+}
+export interface UserLoginResponse {
   username: string;
   firstname: string;
   lastname: string;
@@ -26,11 +80,39 @@ export interface userLoginResponse {
   detail: string;
   phonenumber: string;
 }
-export interface tokenResponse {
+
+export interface TokenResponseType {
+  token: string | null;
+}
+
+export interface CoachDataType {
+  userId: string;
+  username: string;
+  detail: string;
+  firstname: string;
+  lastname: string;
+  phonenumber: string;
+  role: string;
+  session: string;
+  userImage: string;
+  rating: number;
+  averageRating: number;
+  ratingCount: number;
+  bg?: string;
+}
+export interface TokenResponse {
   _token: string;
 }
 // SCHEDULE PAGE
-export type bookingDataResponse = {
+
+export interface BookingDataResponse {
+  // map(
+  //   arg0: (
+  //     bk: bookingDataResponse,
+  //     index: number
+  //   ) => import("react/jsx-runtime").JSX.Element
+  // ): import("react").ReactNode;
+  length: number;
   bookingId: string; //backend
   date: string;
   day: number;
@@ -44,6 +126,7 @@ export type bookingDataResponse = {
   rating?: number;
   comment?: string;
   payment?: string;
+  coachName: string;
   //coach data
   coachId: string | undefined;
   coachPhoneNumber: string;
@@ -56,8 +139,9 @@ export type bookingDataResponse = {
   userFirstName: string;
   userLastName: string;
   userImage: string;
-};
-export type forUserBookingType = {
+  status: string;
+}
+export interface ForUserBookingType {
   date: string;
   day: number;
   price?: number; ////backend => database
@@ -67,60 +151,94 @@ export type forUserBookingType = {
   typeTime?: string;
   coachId: string | undefined;
   userId: string | undefined;
-};
-
-interface coachScheduleType {
-  timeId: string;
-  date: string;
-  availableTime: string;
-  endofavailableTime: string;
-  price: string;
-  user_id: string;
 }
 
 // for convert time
-export type TimeRange = {
+export interface TimeRange {
   startTime: string;
   endTime: string;
-};
+}
 
-export type PriceRange = {
+export interface PriceRange {
   start: string;
   end: string;
   price: number;
-};
+}
 
-export type coachDataType = {
-  userId: string;
-  detail: string;
-  firstname: string;
-  lastname: string;
-  phonenumber: string;
-  role: string;
-  session: string;
-  userImage: string;
-  username: string;
-  bg?: string;
-  averageRating: number;
-  ratingCount: number;
-};
-
-export type updateCommentType = {
+export interface UpdateCommentType {
   bookingId: string;
-  data: updateBookingReqType;
-};
+  data: UpdateBookingReqType;
+}
 
-export type updateBookingReqType = {
+export interface UpdateBookingReqType {
   comment: string;
   rating: number;
-};
-export type reactPopupType = {
+}
+
+export interface TimeSelectedType {
+  day: number;
+  date: string;
+  availableTime: string;
+  endofAvailableTime: string;
+}
+export interface CoachTimeResponse {
+  timeId: string;
+  coachId: string;
+  day: number;
+  date: string;
+  availableTime: string;
+  endOfAvailableTime: string;
+  price: number;
+}
+
+export interface ReactPopupType {
   show: boolean;
   thisBooking: string;
   bookingId: string;
   starValue: number | null | undefined;
   commentText: string | null | undefined;
-  setStarValue: any;
+  setStarValue: React.Dispatch<React.SetStateAction<number>>;
+  setCommentText: React.Dispatch<React.SetStateAction<string>>;
   updateComment: any;
-  setCommentText: any;
-};
+  /*    UseMutation<MutationDefinition<
+      any,
+      BaseQueryFn<
+        // string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      "users",
+      any,
+      "api"
+    >
+  >*/
+}
+
+export interface FormValueType {
+  name: string;
+  label: string;
+  placeholder: string;
+  type: string;
+}
+export interface StyledComponentInput {
+  id: string;
+  placeholder: string;
+  type: string;
+  label: string;
+  inputRef: boolean;
+  formValue: FormValueType;
+  setFormvalue: React.Dispatch<React.SetStateAction<string>>;
+}
+export interface BlogType {
+  header: string;
+  author: string;
+  date: string;
+  category: string;
+  content: string;
+}
+
+export interface BlogProps {
+  data: BlogType[];
+}

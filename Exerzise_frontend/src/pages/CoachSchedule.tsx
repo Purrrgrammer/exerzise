@@ -6,7 +6,7 @@ import { categorize } from "../function";
 import CommonBtn from "../components/CommonBtn";
 import TimePickerValue from "../components/TimePicker";
 import DayPicker from "../components/DayPicker";
-import CoachTimeContainer from "../components/coachTimeContainer";
+import CoachTimeContainer from "../components/CoachTimeContainer";
 
 import dayjs from "dayjs";
 import {
@@ -14,58 +14,38 @@ import {
   useGetCoachTimeQuery,
   usePostScheduleMutation,
 } from "../features/api/apiSlice";
-
-interface timeSelectedType {
-  date?: string;
-  day: number;
-  availableTime: string;
-  endofAvailableTime: string;
-}
+import { useAppSelector } from "../store";
+import { TimeSelectedType } from "../interfaces";
 
 const CoachSchedule = () => {
+  const currentCoachId = useAppSelector((state) => state.user.userId);
+  // post is => JSON.parse(localStorage.getItem("user")!).userId
+
   const [
     deleteSchedule,
-    { isLoading: isUpdating }, // This is the destructured mutation result
+    // { isLoading: isUpdating }, // This is the destructured mutation result
   ] = useDeleteScheduleMutation();
-  const { data, isLoading, error } = useGetCoachTimeQuery(
+  const { data, isLoading } = useGetCoachTimeQuery(
     JSON.parse(localStorage.getItem("user")!).userId
   );
+  const [postSchedule] = usePostScheduleMutation();
 
   useEffect(() => {
     console.log("coach time data", data);
   }, []);
 
-  const [postSchedule] = usePostScheduleMutation();
-
   const [dayAdded, setDayAdded] = useState(0);
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
   const currentDate = dayjs().add(dayAdded, "day").format("DD/MM/YYYY");
-  const [timeSelected, setTimeSelected] = useState<timeSelectedType[] | any>(
-    []
-  );
-  const [timeStart, setTimeStart] = useState<any>();
-  const [timeEnd, setTimeEnd] = useState<any>();
+  const [timeSelected, setTimeSelected] = useState<TimeSelectedType[]>([]);
+  const [timeStart, setTimeStart] = useState<string>(" ");
+  const [timeEnd, setTimeEnd] = useState<string>(" ");
   // useEffect(() => {
   //   console.log("timeStart", timeStart);
   //   console.log("timeEnd", timeEnd);
   // }, [timeStart, timeEnd]);
   const clearThisDay = () => {
     console.log("clear");
-  };
-  const timeSelectHandler = (timeS: string, timeE: string) => {
-    setTimeSelected((prev: timeSelectedType[]) => {
-      let result = [
-        ...prev,
-        {
-          day: currentDay,
-          availableTime: timeS,
-          endofAvailableTime: timeE,
-          date: currentDate,
-        },
-      ];
-      return categorize(result);
-    });
-    console.log(timeSelected); //post this in api
   };
 
   return (
@@ -94,7 +74,22 @@ const CoachSchedule = () => {
           <CommonBtn
             placeholder={"Set Time"}
             onClick={() => {
-              timeSelectHandler(timeStart, timeEnd);
+              setTimeSelected((prev: TimeSelectedType[]) => {
+                console.log("prev", prev);
+
+                let result = [
+                  ...prev,
+                  {
+                    day: currentDay,
+                    date: currentDate,
+                    availableTime: timeStart,
+                    endofAvailableTime: timeEnd,
+                  },
+                ];
+                console.log("categorize(result)", categorize(result));
+                return categorize(result);
+              });
+              // timeSelectHandler(timeStart, timeEnd);
             }}
           />
         }
@@ -104,7 +99,7 @@ const CoachSchedule = () => {
             onClick={() => {
               postSchedule({
                 timeAvailable: timeSelected,
-                coachId: JSON.parse(localStorage.getItem("user")!).userId,
+                coachId: currentCoachId,
               });
             }}
           />
@@ -138,7 +133,7 @@ const CoachSchedule = () => {
               <button
                 onClick={() => {
                   deleteSchedule({
-                    coachId: JSON.parse(localStorage.getItem("user")!).userId,
+                    coachId: currentCoachId,
                     day: val.day,
                   });
                 }}
@@ -152,9 +147,9 @@ const CoachSchedule = () => {
       )}
       <CoachTimeContainer
         data={timeSelected}
+        setTimeSelected={setTimeSelected}
         header={"Alter Time"}
         fn={clearThisDay}
-        setTimeSelected={setTimeSelected}
       />
 
       <Footer />

@@ -2,18 +2,16 @@ const pool = require("../db/pool");
 
 const getCoach = async (req, res) => {
   let responseData = {};
-  const param = req.params.userId;
-  console.log(`param`, param);
+  const userId = req.params.userId;
+  // console.log(`param`, userId);
   try {
     let input = req.body;
     console.log(input);
     const response = await pool.query(
       `SELECT username,u.user_id,first_name,last_name,detail,user_image,u.phone_number ,u.session,coalesce(sum(b.rating)/count(b.rating)) as average_rating,count(b.rating) as done_count 
 FROM users u left join bookings b on u.user_id = b.coach_id WHERE u.user_id = $1 group by u.user_id `,
-      [param]
+      [userId]
     );
-
-    console.log("response", response);
     responseData.success = true;
     responseData.data = response.rows
       .map((i) => ({
@@ -25,19 +23,22 @@ FROM users u left join bookings b on u.user_id = b.coach_id WHERE u.user_id = $1
         session: i.session,
         detail: i.detail,
         phonenumber: i.phone_number,
-        userImage: i.user_image,
-        rating: i.rating,
+        userImage: `http://localhost:5000/images/${i.user_image}`,
+        // rating: i.rating,
         ratingCount: i.rating_count,
-        averageRating: i.average_rating,
+        averageRating: parseInt(i.average_rating),
         ratingCount: i.done_count,
+        price: i.price,
       }))
-      .filter((el) => el.userId === param);
+      .filter((el) => el.userId === userId);
+    res.status(200).send(responseData); //success
   } catch (error) {
+    responseData.messsage = "something wrong";
+    res.status(500).send(responseData); //success
     responseData.success = false;
     console.log(error);
   } finally {
   }
-  res.status(200).send(responseData); //success
   return res.end();
 };
 

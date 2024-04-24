@@ -5,29 +5,34 @@ import {
   useGetBookingsQuery,
   useUpdateCommentMutation,
 } from "../features/api/apiSlice";
-import { bookingDataResponse } from "../interfaces";
+import { BookingDataResponse } from "../interfaces";
 import ReactPopup from "./../components/ReactPopup";
 import Blank from "./Blank";
 import StatusPopup from "./StatusPopup";
+import { useAppSelector } from "../store";
 
 const Booking = () => {
+  const user = useAppSelector((state) => state.user);
+
   const [starValue, setStarValue] = useState<number>(3);
   const [thisBooking, setThisbooking] = useState<string>(" ");
-  const [commentText, setCommentText] = useState<string | null | undefined>("");
+  const [commentText, setCommentText] = useState<string>(" ");
 
   const [
     updateComment,
-    { isLoading: updating }, // This is the destructured mutation result
+    // { isLoading: updating }, // This is the destructured mutation result
   ] = useUpdateCommentMutation();
-  const { data, isLoading, error } = useGetBookingsQuery({
-    userId: localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user")!).userId
-      : null,
+  const { data, isLoading } = useGetBookingsQuery({
+    userId: user.userId,
+    // userId: localStorage.getItem("user")
+    //   ? JSON.parse(localStorage.getItem("user")!).userId
+    //   : null,
     allDone: false,
   });
   useEffect(() => {
     console.log("bookings data", data);
-  }, []);
+    console.log("user fron store", user);
+  }, [user]);
 
   const statusButton = ["cancel", "ongoing", "done"];
   const statusBackground = [
@@ -36,18 +41,17 @@ const Booking = () => {
     { name: "done", color: "bg-lime-400" },
   ];
   const [show, setShow] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
+  // const [showStatus, setShowStatus] = useState(false);
 
   return (
-    // h-[600px] md:h-[600px] md:h-[600px]
     <>
       {isLoading ? (
         "loading"
-      ) : data && data?.length !== 0 ? (
+      ) : data && data.length !== 0 ? (
         <div className="grid grid-cols-1 relative">
-          {data?.map((bk: bookingDataResponse, index: number) => (
+          {data.map((bk: BookingDataResponse, index: number) => (
             <div
-              key={bk.bookingId}
+              key={index}
               className="flex justify-center flex-col md:flex-row m-4"
             >
               <div className="bg-red-200 relative p-4 object-cover overflow-hidden flex justify-center">
@@ -99,12 +103,12 @@ const Booking = () => {
 
                 {/* content */}
                 <div className="h-full mx-4 my-2">
-                  <div>Session: {bk.session}</div>
-                  <div>Booking ID: {bk.bookingId}</div>
                   <div>Date: {bk.date}</div>
                   <div>
                     time: {bk.timeFrom} - {bk.timeTo}
                   </div>
+                  <div>Session: {bk.session === null ? " - " : bk.session}</div>
+                  <div>Booking ID: {bk.bookingId}</div>
                   <div>Coach Phone Number: {bk.coachPhoneNumber}</div>
                   {/* <div>Location:</div> */}
                 </div>
@@ -114,9 +118,9 @@ const Booking = () => {
                     <StatusPopup
                       key={index}
                       status={status}
-                      showStatus={showStatus}
-                      setShowStatus={setShowStatus}
                       bookingId={bk.bookingId}
+                      // setShowStatus={setShowStatus}
+                      // showStatus={showStatus}
                     />
                   ))}
                   {/* popup btn */}

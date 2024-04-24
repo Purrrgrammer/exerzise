@@ -56,12 +56,12 @@ const login = async (req, res) => {
         responseData._token = await common.tokenExc.generateToken(
           responseData.data
         );
-          return res.status(200).send(responseData); //success
+        return res.status(200).send(responseData); //success
       }
     }
   } catch (error) {
     responseData.success = false;
-    responseData.message = "something wrong please try again";
+    responseData.message = "Something Wrong Please Try Again";
     console.log(error);
     return res.status(500).send(responseData); //success
   } finally {

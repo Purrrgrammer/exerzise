@@ -1,5 +1,5 @@
 import { useGetBookingsQuery } from "../features/api/apiSlice";
-import { bookingDataResponse } from "../interfaces";
+import { BookingDataResponse } from "../interfaces";
 
 const List = () => {
   const header = [
@@ -9,11 +9,7 @@ const List = () => {
     { name: "Status" },
     { name: "Price" },
   ];
-  const {
-    data: bookings,
-    isLoading,
-    error,
-  } = useGetBookingsQuery({
+  const { data: bookings, isLoading } = useGetBookingsQuery({
     userId: localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user")!).userId
       : null,
@@ -46,80 +42,80 @@ const List = () => {
             {/* line1 */}
             {isLoading
               ? "loading...."
-              : bookings!.map(
-                  (el: bookingDataResponse | any, index: number) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-slate-200 cursor-pointer"
-                      onClick={() => {
-                        window.location.href = `schedule/${el.bookingId}`;
-                      }}
-                    >
-                      {/* p-5 flex itmes-center justify-center */}
-                      <td className="p-4 border-b border-blue-gray-50 ">
-                        <div className="flex items-center gap-3">
+              : bookings !== undefined
+              ? bookings.map((el: BookingDataResponse, index: number) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-slate-200 cursor-pointer"
+                    onClick={() => {
+                      window.location.href = `schedule/${el.bookingId}`;
+                    }}
+                  >
+                    {/* p-5 flex itmes-center justify-center */}
+                    <td className="p-4 border-b border-blue-gray-50 ">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={el.coachImage}
+                          alt={el.coachId}
+                          className="inline-block relative object-center !rounded-full w-12 h-12 rounded-lg border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
+                        />
+                        <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
+                          {el.coachName}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="p-4 border-b border-blue-gray-50">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+                        {el.bookingId}
+                      </p>
+                    </td>
+                    <td className="p-4 border-b border-blue-gray-50">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+                        <div className="flex flex-col items-start ">
+                          <div>{el.date}</div>
+                          <div>{`${el.timeFrom}-${el.timeTo}`}</div>
+                        </div>
+                      </p>
+                    </td>
+                    <td className="p-4 border-b border-blue-gray-50">
+                      <div className="w-max">
+                        <div
+                          className={`relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none py-1 px-2 text-xs rounded-md   ${
+                            el.status === "pending"
+                              ? "bg-amber-500/20 text-amber-900"
+                              : el.status === "cancled"
+                              ? "bg-red-500/20 text-red-900"
+                              : el.status === "paid"
+                              ? "bg-green-500/20 text-green-900"
+                              : " "
+                          }`}
+                          style={{ opacity: 1 }}
+                        >
+                          <span className="">completed</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-4 border-b border-blue-gray-50">
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
                           <img
-                            src={el.coachImage}
-                            alt={el.coachId}
-                            className="inline-block relative object-center !rounded-full w-12 h-12 rounded-lg border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
+                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/visa.png"
+                            alt="visa"
+                            className="inline-block relative object-center !rounded-none rounded-md h-full w-full object-contain p-1"
                           />
-                          <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-bold">
-                            {el.coachName}
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal capitalize">
+                            visa
+                          </p>
+                          <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
+                            06/2026
                           </p>
                         </div>
-                      </td>
-                      <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                          {el.bookingId}
-                        </p>
-                      </td>
-                      <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                          <div className="flex flex-col items-start ">
-                            <div>{el.date}</div>
-                            <div>{`${el.timeFrom}-${el.timeTo}`}</div>
-                          </div>
-                        </p>
-                      </td>
-                      <td className="p-4 border-b border-blue-gray-50">
-                        <div className="w-max">
-                          <div
-                            className={`relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none py-1 px-2 text-xs rounded-md   ${
-                              el.status === "pending"
-                                ? "bg-amber-500/20 text-amber-900"
-                                : el.status === "cancled"
-                                ? "bg-red-500/20 text-red-900"
-                                : el.status === "paid"
-                                ? "bg-green-500/20 text-green-900"
-                                : " "
-                            }`}
-                            style={{ opacity: 1 }}
-                          >
-                            <span className="">completed</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-4 border-b border-blue-gray-50">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                            <img
-                              src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/visa.png"
-                              alt="visa"
-                              className="inline-block relative object-center !rounded-none rounded-md h-full w-full object-contain p-1"
-                            />
-                          </div>
-                          <div className="flex flex-col">
-                            <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal capitalize">
-                              visa
-                            </p>
-                            <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                              06/2026
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      {/* button */}
-                      {/* <td className="p-4 border-b border-blue-gray-50">
+                      </div>
+                    </td>
+                    {/* button */}
+                    {/* <td className="p-4 border-b border-blue-gray-50">
                   <button
                     onClick={() => {
                       alert(1);
@@ -140,9 +136,9 @@ const List = () => {
                     </span>
                   </button>
                 </td> */}
-                    </tr>
-                  )
-                )}
+                  </tr>
+                ))
+              : null}
             {/* line1 */}
           </tbody>
         </table>

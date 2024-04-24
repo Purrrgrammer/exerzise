@@ -4,7 +4,8 @@ const pool = require("../db/pool");
 const getUserProfile = async (req, res) => {
   let responseData = {};
   const user = req._user;
-  // console.log(`user req`, user);
+  console.log(`initiate user`);
+  
   try {
     const response = await pool.query(
       `SELECT * FROM users where user_id = '${user.userId}'`
@@ -22,11 +23,11 @@ const getUserProfile = async (req, res) => {
 
     responseData.success = true;
     responseData.data = result;
-    res.status(200).send(responseData); //success
+    return res.status(200).send(responseData); //success
   } catch (error) {
     console.log(error);
     responseData.success = true;
-    responseData.message = "something wrong";
+    responseData.message = "Something Wrong";
     res.status(403).send(responseData); //success
   } finally {
   }

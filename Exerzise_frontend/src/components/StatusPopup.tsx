@@ -1,12 +1,13 @@
-import React from "react";
+// import React, { Dispatch, SetStateAction } from "react";
 import Popup from "reactjs-popup";
 import { useUpdateBookingMutation } from "../features/api/apiSlice";
 import { toast } from "react-toastify";
+import { StatusPopupPropsType } from "../interfaces/propTypes";
 
-const StatusPopup = ({ showStatus, setShowStatus, status, bookingId }) => {
+const StatusPopup = ({ status, bookingId }: StatusPopupPropsType) => {
   const [
     updateBooking,
-    { isLoading: isUpdating }, // This is the destructured mutation result
+    // { isLoading: isUpdating }, // This is the destructured mutation result
   ] = useUpdateBookingMutation();
   return (
     <Popup
@@ -18,39 +19,37 @@ const StatusPopup = ({ showStatus, setShowStatus, status, bookingId }) => {
         </button>
       }
     >
-      {(close) => (
-        <div className="p-5">
-          are you sure you want to set this booking ({bookingId}) as{" "}
-          <u>{status}</u>
-          <div className="flex gap-x-2">
-            <button
-              className="bg-red-200 p-2 close button"
-              onClick={() => {
-                updateBooking({ bookingId: bookingId, status: status })
-                  .unwrap()
-                  .then((response) => {
-                    const resolveAfter3Sec = new Promise((resolve) => {
-                      setTimeout(resolve, 3000); //get true from responseData.success
-                    });
-                    toast.promise(resolveAfter3Sec, {
-                      pending: "We are updating booking status, please wait",
-                      success: response.message,
-                      error: "the update has been rejected 🤯",
-                    });
-                  })
-                  .catch((err) => {
-                    toast.error(err.data.message);
+      <div className="p-5">
+        are you sure you want to set this booking ({bookingId}) as{" "}
+        <u>{status}</u>
+        <div className="flex gap-x-2">
+          <button
+            className="bg-red-200 p-2 close button"
+            onClick={() => {
+              updateBooking({ bookingId: bookingId, status: status })
+                .unwrap()
+                .then((response) => {
+                  const resolveAfter3Sec = new Promise((resolve) => {
+                    setTimeout(resolve, 3000); //get true from responseData.success
                   });
-              }}
-            >
-              yes
-            </button>
-            <button className="bg-red-200 p-2 close button" onClick={close}>
-              no
-            </button>
-          </div>
+                  toast.promise(resolveAfter3Sec, {
+                    pending: "We are updating booking status, please wait",
+                    success: response.message,
+                    error: "the update has been rejected 🤯",
+                  });
+                })
+                .catch((err) => {
+                  toast.error(err.data.message);
+                });
+            }}
+          >
+            yes
+          </button>
+          <button className="bg-red-200 p-2 close button" onClick={close}>
+            no
+          </button>
         </div>
-      )}
+      </div>
     </Popup>
   );
 };

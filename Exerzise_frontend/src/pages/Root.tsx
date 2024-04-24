@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
-import Form from "../components/Form/Form";
+import Navbar from "../components/Navbar";
+import Form from "../components/form/Form";
 import Footer from "../components/Footer";
 
 const Root = () => {

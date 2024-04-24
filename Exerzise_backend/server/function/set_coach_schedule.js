@@ -1,8 +1,8 @@
 const pool = require("../db/pool");
-const utilityFunctions = require("../function/utilityfunction");
+const utilityFunctions = require("./utilityfunction");
 const { v4: uuidv4 } = require("uuid");
 
-const setCoachTime = async (req, res) => {
+const setCoachSchedule = async (req, res) => {
   let responseData = {};
   try {
     console.log("setCoachTime");
@@ -70,4 +70,4 @@ const setCoachTime = async (req, res) => {
   res.status(200).send(responseData); //success
 };
 
-module.exports = setCoachTime;
+module.exports = setCoachSchedule;

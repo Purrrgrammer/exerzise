@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import AddBtn from "./AddBtn";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
 import { useGetUserProfileQuery } from "../features/api/apiSlice";
-import { initialState } from ".././features/slices/userDataSlice";
+import { initialState, setUser } from ".././features/slices/userDataSlice";
+
+import { useAppSelector } from "../store";
+import { useDispatch } from "react-redux";
 // import { findLocalUser } from "../function";
 const pages = [
   { name: "Exerzise", path: "/home", icon: "../../public/logo1.jpg" },
@@ -16,19 +18,37 @@ const pages = [
 ];
 
 const Navbar = () => {
-  // const user1 = useSelector((state: any) => state.user);
+  const tokenStore = useAppSelector((state) => state.token);
+  const dispatch = useDispatch();
   // const user = findLocalUser("user", globalUser);
   // const token = JSON.parse(localStorage.getItem("token")!);
-  const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const [skip, setSkip] = useState(false);
 
-  const { data: user, error, isLoading } = useGetUserProfileQuery(undefined); //coach data,
-  const [displayUser, setDisplayUser] = useState(initialState);
+  const {
+    data: user,
+
+    // error,
+    // isLoading,
+  } = useGetUserProfileQuery(undefined, { skip: !Boolean(tokenStore.token) }); //coach data,
+  // const [displayUser, setDisplayUser] = useState(initialState);
+  const localToken = localStorage.getItem("token");
+  useEffect(() => {
+    if (!localToken) {
+      dispatch(setUser(initialState)); //set display user state by by api
+      return;
+    }
+    if (user) {
+      dispatch(setUser(user)); //set display user state by by api
+    }
+    //when tokenchanged dont call api return state as initial
+  }, [user, localToken]);
 
   const [nav, setNav] = useState(false);
   useEffect(() => {
-    // setSkip(false);
+    if (tokenStore) {
+      // console.log("booltoken", Boolean(""), tokenStore.token);
+      console.log("booltoken", tokenStore);
+    }
+
     // if (!token || user === undefined) {
     //   setDisplayUser(initialState);
     // } else {
@@ -36,7 +56,7 @@ const Navbar = () => {
     //   console.log("user", user);
     // }
     // console.log("displayUser", displayUser);
-  }, [user, token]);
+  }, [tokenStore.token]);
 
   const handleNav = () => {
     setNav(!nav);
@@ -79,8 +99,12 @@ const Navbar = () => {
           <div className="lg:px-10">
             <img
               className="w-5 h-5"
-              src={displayUser.userImage}
-              alt={displayUser.username}
+              src={
+                user
+                  ? user.userImage
+                  : "https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78="
+              }
+              alt={"profileimage"}
             />
           </div>
         </NavLink>
@@ -122,7 +146,7 @@ const Navbar = () => {
           className="p-4 border-b border-gray-600 rounded-xl hover:bg-[#D8D8D8] duration-300 cursor-pointer "
         >
           <Link to={"/user"} id="moblienav">
-            {displayUser.username}
+            {user ? user.username : " "}
           </Link>
         </li>
       </ul>

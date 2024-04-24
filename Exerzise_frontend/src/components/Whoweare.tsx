@@ -2,8 +2,8 @@ import CommonBtn from "./CommonBtn";
 
 const Whoweare = () => {
   return (
-    <div className="flex justify-center mx-auto my-10 gap-x-10 w-1/2 flex-shrink-0">
-      <div className="flex flex-col w-1/2  gap-y-6 ">
+    <div className="flex justify-center mx-auto my-10 gap-x-10 md:w-1/2 flex-shrink-0">
+      <div className="flex flex-col w-1/2 gap-y-6">
         <b className="text-xl">
           We care about your health and life performance
         </b>
@@ -15,10 +15,7 @@ const Whoweare = () => {
           fitness and nutrition plan aimed at assisting you in reaching your
           specific goals.
         </p>
-        <CommonBtn
-          placeholder={"contact us for more info"}
-          onClick={undefined}
-        />
+        <CommonBtn placeholder={"contact us for more info"} />
       </div>
       <div className="w-100 relative hidden md:block">
         <img

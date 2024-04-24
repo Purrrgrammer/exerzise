@@ -1,15 +1,15 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../store";
 
 const AddBtn = () => {
+  const user = useAppSelector((state) => state.user);
+
   return (
     <Link
       to={
-        localStorage.getItem("user") &&
-        JSON.parse(localStorage.getItem("user")!).role === "user"
+        user.role === "user"
           ? "/coach"
-          : localStorage.getItem("user") &&
-            JSON.parse(localStorage.getItem("user")!).role === "coach"
+          : user.role === "coach"
           ? "/coach/schedule"
           : "/"
       }

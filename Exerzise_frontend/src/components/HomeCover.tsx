@@ -1,5 +1,3 @@
-import React from "react";
-
 const HomeCover = () => {
   return (
     <div className="cover-container">

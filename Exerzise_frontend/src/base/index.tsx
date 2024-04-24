@@ -11,7 +11,7 @@ export const dayNames = [
 export const createTimeTable = () => {
   const timeRange = [];
 
-  const formatting = (number) => {
+  const formatting = (number: number) => {
     if (number < 10) {
       return `0${number}:00 - 0${number + 1}:00`;
     }
@@ -37,3 +37,54 @@ export const backgroundImages = [
     bg: "https://i.pinimg.com/originals/30/28/79/302879c6f08ecd109011a3e13f4f81e3.jpg",
   },
 ];
+export const registerform = [
+  {
+    name: "firstname",
+    label: "First Name",
+    placeholder: "Enter your First Name",
+  },
+  {
+    name: "lastname",
+    label: "Last Name",
+    placeholder: "Enter your First Name",
+  },
+  {
+    name: "username",
+    label: "User Name",
+    placeholder: "enter your Username",
+  },
+  {
+    name: "password",
+    label: "Password",
+    placeholder: "Password",
+    type: "password",
+  },
+  { name: "email", label: "Email", placeholder: "Your Email" },
+  {
+    name: "phonenumber",
+    label: "phonenumber",
+    placeholder: "Your Phonenumber",
+  },
+  {
+    name: "role",
+    label: "Register as? ",
+    type: "select",
+    placeholder: "",
+  },
+];
+
+export const loginForm = [
+  {
+    name: "username",
+    label: "User Name",
+    placeholder: "enter your Username",
+  },
+  {
+    name: "password",
+    label: "Password",
+    placeholder: "Password",
+    type: "password",
+  },
+];
+
+// export const initialRegisterform = getInitialFormObjects(registerform);

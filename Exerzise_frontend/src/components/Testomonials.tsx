@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 
 const Testomonials = () => {
   const carouselDirectionHandler = (direction: "+" | "-") => {

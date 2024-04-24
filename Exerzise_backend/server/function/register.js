@@ -14,7 +14,7 @@ const register = async (req, res) => {
 
     if (dupeResponse.rowCount > 0) {
       responseData.success = false;
-      responseData.message = "duplicated user";
+      responseData.message = "Duplicated User";
       return res.status(403).send(responseData);
     } else {
       console.log(input.password);
@@ -40,11 +40,13 @@ const register = async (req, res) => {
       ];
       const result = await pool.query(sql, param);
       responseData.success = true;
-      responseData.message = "Successfully registered";
+      responseData.message = "Successfully Registered, You can Login now!";
       return res.status(200).send(responseData);
     }
   } catch (error) {
     responseData.success = false;
+    responseData.message = "Something Wrong";
+    res.status(500).send(responseData);
     console.log(error);
   } finally {
   }

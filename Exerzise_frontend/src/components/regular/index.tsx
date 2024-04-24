@@ -1,12 +1,11 @@
 import { useDispatch } from "react-redux";
+import { JustAButtonPropType } from "../../interfaces/propTypes";
 import { logout } from "../../features/slices/userDataSlice";
 import { useNavigate } from "react-router-dom";
 
-export const JustAButton = ({ name }) => {
+export const JustAButton = ({ name }: JustAButtonPropType) => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   return (
     <button
       onClick={() => {

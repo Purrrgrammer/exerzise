@@ -18,7 +18,7 @@ export const useAuth = () => {
     }
   };
 
-  const [roleCoach, setRoleCoach] = useState(isCoach());
-  const [token, setToken] = useState(getToken());
+  const [roleCoach, _setRoleCoach] = useState(isCoach());
+  const [token, _setToken] = useState(getToken());
   return { roleCoach, token };
 };

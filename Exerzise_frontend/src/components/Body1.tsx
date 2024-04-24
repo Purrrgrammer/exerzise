@@ -1,6 +1,3 @@
-import React from "react";
-import Bars from "./Bars";
-
 const Body1 = () => {
   return (
     <div className="body1 flex items-center justify-center static md:relative md:mt-[150px]">

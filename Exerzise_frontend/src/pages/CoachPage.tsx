@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Pagination from "../components/Pagination";
+import { ChangeEvent, useEffect, useState } from "react";
+// import Pagination from "../components/Pagination";
 import Navbar from "../components/Navbar";
 import CoachCard from "../components/CoachCard";
 import FilterBar from "../components/FilterBar";
@@ -9,17 +9,18 @@ import { filterSearch } from "../function";
 import { SearchBar } from "../components/SearchBar";
 
 const CoachPage = () => {
-  const { data, error, isLoading } = useGetAllCoachesQuery(null);
+  const { data, isLoading } = useGetAllCoachesQuery(null);
   const [filterState, setFilterState] = useState("all");
   const [displayData, setDisplayData] = useState(data);
-  const [searchInput, setSearchInput] = useState(" ");
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     setDisplayData(filterSearch(data, searchInput, filterState));
   }, [data, searchInput, filterState]);
 
-  const searchHandler = (e) => {
-    setSearchInput(e.target.value);
+  const searchHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    const value = e.target.value;
+    setSearchInput(value);
   };
 
   return (

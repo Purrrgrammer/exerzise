@@ -1,33 +1,39 @@
 import ReactDOM from "react-dom/client";
-import { AboutPage, HomePage, Root, Schedule } from "./pages/index";
+import React, { ReactNode, useEffect } from "react";
 import "./index.css";
+import {
+  AboutPage,
+  ActivitiesPage,
+  Blog,
+  BlogDetail,
+  ClassPage,
+  CoachDetail,
+  CoachPage,
+  CoachSchedule,
+  HomePage,
+  Root,
+  Schedule,
+  ScheduleDetailPage,
+  UserPage,
+} from "./pages/index";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import React, { useState } from "react";
-import CoachPage from "./pages/CoachPage";
-import ActivitiesPage from "./pages/ActivitiesPage";
-import UserPage from "./pages/UserPage";
-import CoachDetail from "./pages/CoachDetail";
-import ScheduleDetailPage from "./pages/ScheduleDetailPage";
-import Blog from "./pages/BlogPage";
-import BlogDetail from "./pages/BlogDetail";
+
+import { ProtectedRoute } from "./pages/ProtectedRoute";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import App from "./App";
 import { store } from "./store";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 // RTK Query
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
-import { apiSlice, bookingApi } from "./features/api/apiSlice";
-import { ProtectedRoute } from "./pages/ProtectedRoute";
-import CoachSchedule from "./pages/CoachSchedule";
-import { userLoginResponse } from "./interfaces";
-import ClassPage from "./pages/ClassPage";
+import { apiSlice } from "./features/api/apiSlice";
+import { setToken } from "./features/slices/tokenSlice";
 
-const userlocal = localStorage.getItem("user");
-const user = userlocal
-  ? (JSON.parse(userlocal) as userLoginResponse)
-  : undefined;
+// const userlocal = localStorage.getItem("user");
+// const user = userlocal
+//   ? (JSON.parse(userlocal) as userLoginResponse)
+//   : undefined;
 
-const coachRouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
@@ -49,7 +55,6 @@ const coachRouter = createBrowserRouter([
     path: "schedule/:exzId",
     element: <ScheduleDetailPage />,
   },
-  // auth
   {
     path: "coach",
     element: <CoachPage />,
@@ -79,7 +84,7 @@ const coachRouter = createBrowserRouter([
     path: "user",
     element: (
       <ProtectedRoute
-        user={user ? user.role : undefined}
+        // user={user ? user.role : undefined}
         isAllowed={true}
         redirectPath={"/"}
         accessibleRole={["user", "coach"]}
@@ -91,16 +96,7 @@ const coachRouter = createBrowserRouter([
   },
   {
     path: "blog",
-    element: (
-      <ProtectedRoute
-        user={user ? user.role : undefined}
-        isAllowed={true}
-        redirectPath={"/"}
-        accessibleRole={["user", "coach"]}
-      >
-        <Blog />
-      </ProtectedRoute>
-    ),
+    element: <Blog />,
   },
   {
     path: "blog/:blogId",
@@ -111,52 +107,23 @@ const coachRouter = createBrowserRouter([
     element: <ClassPage />,
   },
 ]);
-const commonRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-  },
-  // main
-  {
-    path: "home",
-    element: <HomePage />,
-  },
-  {
-    path: "about",
-    element: <AboutPage />,
-  },
-  {
-    path: "schedule",
-    element: <Schedule />,
-  },
-  {
-    path: "schedule/:exzId",
-    element: <ScheduleDetailPage />,
-  },
-  // auth
-  {
-    path: "coach",
-    element: <CoachPage />,
-  },
-  {
-    path: "user",
-    element: <UserPage />,
-  },
-  {
-    path: "coach/:coachId",
-    element: <CoachDetail />,
-  },
-  // {
-  //   path: "blog",
-  //   element: <Blog />,
-  // },
-  {
-    path: "blog/:blogId",
-    element: <BlogDetail />,
-  },
-]);
 
-const selectRouter = localStorage.getItem("user")! ? coachRouter : commonRouter;
+const Test = ({ children }: { children: ReactNode }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+    if (localToken) {
+      const token = JSON.parse(localToken).token;
+      dispatch(setToken({ token: token }));
+    }
+    //  else {
+    //   dispatch(setToken({ token: null }));
+    // }
+  }, []);
+  return children;
+};
+
+// const selectRouter = localStorage.getItem("user")! ? coachRouter : commonRouter;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -164,7 +131,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Provider store={store}>
         {/* <BrowserRouter>
           <App /> */}
-        <RouterProvider router={coachRouter} />
+        <Test>
+          <RouterProvider router={router} />
+        </Test>
         {/* </BrowserRouter> */}
       </Provider>
     </ApiProvider>

@@ -1,6 +1,6 @@
-import React from "react";
+import { PageHeaderCoverPropType } from "../interfaces/propTypes";
 
-const PageHeaderCover = ({ header, background }) => {
+const PageHeaderCover = ({ header, background }: PageHeaderCoverPropType) => {
   return (
     <div className="relative h-[360px]">
       <img

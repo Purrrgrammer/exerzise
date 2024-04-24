@@ -1,139 +1,104 @@
-import { useEffect, useRef, useState } from "react";
-import { BTN, Input, StyleForm } from "../styled";
 import { getInitialFormObjects } from "../../function";
+import { FormEvent, useEffect, useState } from "react";
+import { BTN, Input, StyleForm } from "../styled";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../features/slices/userDataSlice";
 import {
   useLoginMutation,
   useRegisterMutation,
 } from "../../features/api/apiSlice";
-
-interface formprops {
-  setPageState: any;
-  pageState: string;
-  name: string;
-}
 import { useNavigate } from "react-router-dom";
 import AlertBox from "../AlertBox";
 import { toast } from "react-toastify";
-const Form = ({ setPageState, pageState }: formprops) => {
+import { setToken } from "../../features/slices/tokenSlice";
+import { Formprops } from "../../interfaces/propTypes";
+import { loginForm, registerform } from "../../base";
+
+export const Form1 = ({ setPageState, pageState }: Formprops) => {
+  // const formRef = useRef<HTMLInputElement>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formRef = useRef<any>();
   const [login, { isLoading: isUpdating }] = useLoginMutation();
   const [register] = useRegisterMutation();
 
-  useEffect(() => {
-    formRef.current.reset();
-  }, [pageState]);
-  const submitHandler = (e: any) => {
-    e.preventDefault();
-    if (pageState === "login") {
-      // console.log("formValue", formValue);
-      login(formValue)
-        .unwrap()
-        .then((loginResponse) => {
-          // console.log("loginResponse successresponse", loginResponse);
-          const resolveAfter3Sec = new Promise((resolve) => {
-            setTimeout(resolve, 3000);
-          });
-          if (loginResponse.success === true) {
-            toast.promise(resolveAfter3Sec, {
-              pending: "Loggin in...",
-              success: loginResponse.message,
-              error: "Please login again",
-            });
-            dispatch(setUser(loginResponse));
-          } else {
-            toast.error(loginResponse.message);
-          }
-          return setTimeout(() => {
-            navigate("/home");
-          }, 4000);
-        })
-        .catch((err) => {
-          toast.error(err.data.message);
-
-          // alert(err.message);
-        });
-    } else {
-      register(formValue);
-    }
-    formRef.current.reset();
-  };
-  const formLink =
-    pageState === "register"
-      ? "http://localhost:5000/register"
-      : "http://localhost:5000/login";
-  let formArr =
-    pageState === "register"
-      ? [
-          {
-            name: "firstname",
-            label: "First Name",
-            placeholder: "Enter your First Name",
-          },
-          {
-            name: "lastname",
-            label: "Last Name",
-            placeholder: "Enter your First Name",
-          },
-          {
-            name: "username",
-            label: "User Name",
-            placeholder: "enter your Username",
-          },
-          {
-            name: "password",
-            label: "Password",
-            placeholder: "Password",
-            type: "password",
-          },
-          { name: "email", label: "Email", placeholder: "Your Email" },
-          {
-            name: "phonenumber",
-            label: "phonenumber",
-            placeholder: "Your Phonenumber",
-          },
-          { name: "role", label: "Register as? ", type: "select" },
-        ]
-      : [
-          {
-            name: "username",
-            label: "User Name",
-            placeholder: "enter your Username",
-          },
-          {
-            name: "password",
-            label: "Password",
-            placeholder: "Password",
-            type: "password",
-          },
-        ];
+  let formArr = pageState === "register" ? registerform : loginForm;
   const initialFormValue = getInitialFormObjects(formArr);
   const [formValue, setFormvalue] = useState(initialFormValue);
-
+  useEffect(() => {
+    // formRef.current.reset();
+    // formRef.current!.value = "";
+  }, [pageState]);
   useEffect(() => {
     setFormvalue(initialFormValue);
     // console.log(initialFormValue);
   }, [pageState]);
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (pageState === "login") {
+      // const wait = toast.loading("Please wait...");
+
+      // console.log("formValue", formValue);
+      const resolveAfter3Sec = new Promise((resolve) => {
+        setTimeout(resolve, 3000);
+      });
+
+      login(formValue)
+        .unwrap()
+        .then((loginResponse) => {
+          console.log("loginResponse", loginResponse);
+          dispatch(setUser(loginResponse.data));
+          dispatch(setToken({ token: loginResponse._token }));
+          toast
+            .promise(resolveAfter3Sec, {
+              pending: "Loggin In...",
+              success: `${loginResponse.message} `,
+              error: "Please Login Again",
+            })
+            .then(() => {
+              navigate("/home");
+            })
+            .then(() => {
+              setTimeout(() => {
+                toast.success(`Welcome ${loginResponse.data.firstname}`);
+              }, 1);
+            });
+        })
+        .catch((err) => {
+          toast.error(err.data.message);
+        });
+    } else {
+      register(formValue)
+        .unwrap()
+        .then((registerResponse) => {
+          toast.success(`${registerResponse.message}`);
+          setPageState("login");
+        })
+        .catch((err) => {
+          toast.error(err.data.message);
+        });
+    }
+    // formRef.current.reset();
+    // formRef.current!.value = "";
+  };
+
   return (
     <>
       <AlertBox />
       {isUpdating ? (
-        "Loading"
+        " "
       ) : (
-        <StyleForm id={pageState} onSubmit={submitHandler} ref={formRef}>
+        <StyleForm id={pageState} onSubmit={submitHandler}>
           <b className="p-4 text-3xl">{pageState.toUpperCase()}</b>
           {formArr.map((input, index) => (
             <Input
-              key={index}
+              // inputRef={formRef}
               id={input.name}
-              type={input.type}
               placeholder={input.name}
               label={input.name}
+              type={input.type}
               formValue={formValue}
               setFormvalue={setFormvalue}
+              key={index}
             />
           ))}
           <div>
@@ -160,5 +125,4 @@ const Form = ({ setPageState, pageState }: formprops) => {
     </>
   );
 };
-
-export default Form;
+export default Form1;

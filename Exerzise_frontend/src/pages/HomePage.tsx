@@ -1,5 +1,3 @@
-import React from "react";
-import { RootState } from "../store";
 import Navbar from "../components/Navbar";
 import Bars from "../components/Bars";
 import Body1 from "../components/Body1";
@@ -10,10 +8,12 @@ import Benefits from "../components/Benefits";
 import { ActivitiesBox } from "../components/ActivitiesBox";
 import Gallery from "../components/Gallery";
 import HomeCover from "../components/HomeCover";
+import AlertBox from "../components/AlertBox";
 
 const HomePage = () => {
   return (
     <div>
+      <AlertBox />
       <Navbar />
       <HomeCover />
       <div className="md:mt-[150px] relative ">

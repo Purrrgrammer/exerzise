@@ -1,19 +1,14 @@
 import Rating from "@mui/material/Rating";
 import { Link } from "react-router-dom";
 import { backgroundImages } from "../base";
-import { coachDataType } from "../interfaces";
+import { CoachCardProps } from "../interfaces/propTypes";
+import { CoachDataType } from "../interfaces";
 
-interface coachcardprops {
-  coachData?: any;
-}
-
-const CoachCard = ({ coachData }: coachcardprops) => {
-  // console.log("data from props", coachData);
-  //data that fetched from coach
+const CoachCard = ({ coachData }: CoachCardProps) => {
   return (
     <>
-      {coachData
-        ? coachData!.map((el: coachDataType, index: number) => (
+      {coachData !== undefined
+        ? coachData.map((el: CoachDataType, index: number) => (
             <Link to={`/coach/${el.userId}`} key={index}>
               <div
                 key={index}

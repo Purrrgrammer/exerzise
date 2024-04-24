@@ -1,10 +1,16 @@
 import { dayNames } from "../base";
+import { CoachTimeContainerPropType } from "../interfaces/propTypes";
 
-export const CoachTimeContainer = ({ header, data, fn, setTimeSelected }) => (
+export const CoachTimeContainer = ({
+  data,
+  header,
+  fn,
+  setTimeSelected,
+}: CoachTimeContainerPropType) => (
   <>
     <div className="m-5 w-full text-center">{header}</div>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 mx-7 ">
-      {data?.map((val, index: number) => (
+      {data.map((val, index: number) => (
         <div
           key={index}
           className="bg-red-200 p-4 flex flex-col items-center relative"

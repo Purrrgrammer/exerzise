@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -12,14 +12,14 @@ dayjs.extend(timezone);
 
 interface TimePickerValueProps {
   label: string;
-  setVal: any;
   val?: string;
+  setVal: React.SetStateAction<string> | Dispatch<SetStateAction<string>> | any;
 }
 export default function TimePickerValue({
   label,
   setVal,
 }: TimePickerValueProps) {
-  const [value, setValue] = React.useState<Dayjs | null>(
+  const [value, _setValue] = React.useState<Dayjs | null>(
     dayjs.utc("2022-04-17T15:30:00+00:00")
   );
   return (
@@ -32,12 +32,11 @@ export default function TimePickerValue({
           label={label}
           value={value}
           onChange={(newValue) => {
-            return (
-              setValue(newValue), setVal(newValue!.toString().slice(17, 22))
-            );
+            if (newValue) {
+              return setVal(newValue.toString().slice(17, 22));
+            }
+            // original => setValue(newValue), setVal(newValue.toString().slice(17, 22))
           }}
-          //   views={["hours", "minutes"]}
-          //   format="hh:mm"
         />
       </DemoContainer>
     </LocalizationProvider>

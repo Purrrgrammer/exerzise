@@ -1,8 +1,8 @@
 import Rating from "@mui/material/Rating";
 import Popup from "reactjs-popup";
-import { reactPopupType } from "../interfaces";
+import { ReactPopupType } from "../interfaces";
 
-const ReactPopup = (props: reactPopupType) => {
+const ReactPopup = (props: ReactPopupType) => {
   const {
     show,
     starValue,
@@ -26,7 +26,7 @@ const ReactPopup = (props: reactPopupType) => {
             name="simple-controlled"
             value={starValue}
             onChange={(_, newValue) => {
-              setStarValue(newValue);
+              setStarValue(newValue as number);
             }}
             defaultValue={2.5}
             precision={0.5}

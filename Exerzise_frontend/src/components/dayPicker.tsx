@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { createTimeTable, dayNames } from "../base";
-import { getDateinWeeks } from "../function";
+import { dayNames } from "../base";
+import { DayPickerPropType } from "../interfaces/propTypes";
 
-const DayPicker = ({ setCurrentDay, currentDay, setDayAdded, currentDate }) => {
+const DayPicker = ({
+  currentDay,
+  setCurrentDay,
+  setDayAdded,
+  currentDate,
+}: DayPickerPropType) => {
   let thisDate = (
     <div className="flex flex-col">
       <div>{`${dayNames[currentDay]}`}</div>

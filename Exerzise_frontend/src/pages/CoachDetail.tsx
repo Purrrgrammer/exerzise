@@ -16,56 +16,51 @@ import {
 } from "../features/api/apiSlice";
 import { removeObjectValueDupe } from "../function";
 import CommonBtn from "../components/CommonBtn";
-import { PriceRange, TimeRange, forUserBookingType } from "../interfaces";
+import { CoachTimeResponse, ForUserBookingType } from "../interfaces";
 import AlertBox from "../components/AlertBox";
 import { toast } from "react-toastify";
 
 const CoachDetail = () => {
-  const defaultData = [
-    {
-      coachId: "999",
-      firstname: "default",
-      lastname: "default",
-      bio: "defaultdefaultdefaultdefaultdefault",
-      image: "",
-      bg: "https://as2.ftcdn.net/v2/jpg/01/03/88/65/1000_F_103886569_ytWItMqrlRWbIEcSrhPyk1IkGqEG7I8w.jpg",
-      session: "defaultdefaultdefaultdefault",
-    },
-  ];
-  const [postBookings, bookingResult] = usePostBookingsMutation();
+  const [postBookings] = usePostBookingsMutation();
   const [dayAdded, setDayAdded] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-
   const currentDate = dayjs().add(dayAdded, "day").format("L");
   // console.log("dayAdded", dayAdded); repeat
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
   const { coachId } = useParams<string>();
-  const { data, error, isLoading } = useGetCoachQuery(coachId); //coach data
+  const { data } = useGetCoachQuery(coachId); //coach data
   // schedule
-  const [userChose, setUserChose] = useState<forUserBookingType[]>([]);
+  const [userChose, setUserChose] = useState<ForUserBookingType[]>([]);
   const {
     data: coachSceduleData,
-    error: coachSceduleError,
+    // error: coachSceduleError,
     isLoading: coachSceduleLoading,
+    refetch,
   } = useGetCoachSceduleByDayQuery({
     coachId: coachId,
     date: currentDate,
     // .format("L")
   });
-  const [displayData, setDisplayData] = useState(
+  const [scheduleDisplayData, setscheduleDisplayData] = useState<string[]>(
     coachSceduleData?.availableTime || null
+    // coachSceduleData?.availableTime
   );
-  console.log("coach detail data", data);
 
+  useEffect(() => {
+    console.log("coach detail data", data);
+  }, [data]);
   useEffect(() => {
     if (coachSceduleData) {
-      setDisplayData(coachSceduleData.availableTime);
+      setscheduleDisplayData(coachSceduleData.availableTime);
     }
+
     setUserChose([]);
   }, [currentDay, coachSceduleData]);
+  // }, [currentDay]);
 
   useEffect(() => {
-    setDisplayData((prev) => {
+    setscheduleDisplayData((prev: string[]) => {
+      // console.log("prev", prev);
       if (prev) {
         return prev.filter(
           (old: string) => !userChose.find((chosen) => old === chosen.timeFrom)
@@ -89,14 +84,15 @@ const CoachDetail = () => {
       })
         .unwrap()
         .then((bookingResponse) => {
-          toast.promise(resolveAfter3Sec, {
-            pending: "We are booking, please wait",
-            success: bookingResponse.message,
-            error: "the Booking(s) has been rejected 🤯",
-          });
-          // return; // setTimeout(() => {
-          //   window.location.reload();
-          // }, 5000);
+          toast
+            .promise(resolveAfter3Sec, {
+              pending: "We are booking, please wait",
+              success: bookingResponse.message,
+              error: "the Booking(s) has been rejected 🤯",
+            })
+            .then(() => {
+              refetch();
+            });
         })
 
         .catch((reject) => {
@@ -106,11 +102,11 @@ const CoachDetail = () => {
   };
   const timeSelectHandler = (time: string) => {
     setUserChose((prev) => {
-      const { session } = data[0];
+      const { session } = coachSceduleData.data;
       const { userId } = localStorage.getItem("user")!
         ? JSON.parse(localStorage.getItem("user")!)
         : " ";
-      const newTimeSelected: forUserBookingType = {
+      const newTimeSelected: ForUserBookingType = {
         date: currentDate,
         day: currentDay,
         timeFrom: time,
@@ -136,11 +132,13 @@ const CoachDetail = () => {
     ];
     console.log("timeArray", timeArray);
     // for acculmulate price
-    const priceRanges = coachSceduleData.data.map((time) => ({
-      start: time.available_time,
-      end: time.endofavailable_time,
-      price: time.price,
-    }));
+    const priceRanges = coachSceduleData.data.map(
+      (time: CoachTimeResponse) => ({
+        start: time.availableTime,
+        end: time.endOfAvailableTime,
+        price: time.price,
+      })
+    );
     let total = 0;
     console.log("priceRanges", priceRanges);
     for (const timeRange of timeArray) {
@@ -158,7 +156,7 @@ const CoachDetail = () => {
       <Navbar />
       <AlertBox />
       <div className="flex justify-center my-10">
-        <CoachCard coachData={data ? data : null} />
+        <CoachCard coachData={data} />
         <div>
           <DayPicker
             currentDate={currentDate}
@@ -167,10 +165,10 @@ const CoachDetail = () => {
             setCurrentDay={setCurrentDay}
           />
           <div className="grid grid-cols-7 gap-3 ">
-            {/*newly filtered with chosen original */}
+            {/*newly filtered with chosen original */}{" "}
             {coachSceduleLoading
               ? "loading......"
-              : displayData?.map(
+              : scheduleDisplayData?.map(
                   (
                     time: string,
                     index: number //map time available from date
@@ -199,7 +197,10 @@ const CoachDetail = () => {
                     setUserChose((prev) =>
                       prev.filter((item) => item !== selectedTime)
                     );
-                    setDisplayData((prev) => [...prev, selectedTime.timeFrom]);
+                    setscheduleDisplayData((prev) => [
+                      ...prev,
+                      selectedTime.timeFrom,
+                    ]);
                   }}
                 >
                   {`${selectedTime.timeFrom}-${selectedTime.timeTo}`}
@@ -216,7 +217,7 @@ const CoachDetail = () => {
                 placeholder={"Clear Bookings"}
                 onClick={() => {
                   setUserChose([]);
-                  setDisplayData(coachSceduleData.availableTime);
+                  setscheduleDisplayData(coachSceduleData.availableTime);
                   toast.success("Bookings Cleared!");
                 }}
               />

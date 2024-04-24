@@ -4,11 +4,11 @@ const { v4: uuidv4 } = require("uuid");
 const bookCoachTime = async (req, res) => {
   let responseData = {};
   let isFound = false;
+  let input = req.body;
+  let coachParam = req.params.coachId;
   try {
-    let input = req.body;
-    let coachParam = req.params.coachId;
-    // console.log(`coachParam`, coachParam);
-    // console.log("input", input);
+    console.log(`coachParam`, coachParam);
+    console.log("input", input);
     let sqlFind = `SELECT * FROM bookings WHERE date = $1 and day = $2 and time_from = $3 and time_to = $4;`;
 
     for (let index = 0; index < input.length; index++) {

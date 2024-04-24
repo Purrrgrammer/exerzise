@@ -1,4 +1,4 @@
-import { ActivitiesBox } from "../components/ActivitiesBox";
+// import { ActivitiesBox } from "../components/ActivitiesBox";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
