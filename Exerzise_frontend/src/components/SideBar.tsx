@@ -4,6 +4,7 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 import { useAppSelector } from "../store";
 import { SideBarPropsType } from "../interfaces/propTypes";
+import { toast } from "react-toastify";
 
 const SideBar = ({ setContent }: SideBarPropsType) => {
   // const user = findLocalUser("user", globalUser);
@@ -27,15 +28,17 @@ const SideBar = ({ setContent }: SideBarPropsType) => {
     })
       .unwrap()
       .then((fulfillled) => {
-        console.log(fulfillled);
+        toast.success(fulfillled.message);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       })
       .catch((err) => {
         console.log(err);
       });
-    // upup({ userId, imageFile });
   };
 
-  // const { data: user, error, isLoading } = useGetUserProfileQuery(null); //coach data
   const link = [{ name: "profile" }, { name: "history" }, { name: "favorite" }];
 
   return (

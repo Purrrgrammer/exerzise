@@ -1,23 +1,27 @@
 import Rating from "@mui/material/Rating";
 import Popup from "reactjs-popup";
-import { ReactPopupType } from "../interfaces";
+import { toast } from "react-toastify";
+import { ReactPopupType } from "../interfaces/propTypes";
 
-const ReactPopup = (props: ReactPopupType) => {
+const CompleteBookingPopup = (props: ReactPopupType) => {
   const {
+    refetch,
     show,
+    setShow,
     starValue,
+    setStarValue,
     thisBooking,
     // bookingId,
     commentText,
-    setStarValue,
-    updateComment,
     setCommentText,
+    updateComment,
   } = props;
+
   return (
     <Popup closeOnDocumentClick open={show}>
-      {/*   */}
       <div
-        className={`flex flex-col items-center feedback p-4 py-0 h-[200px] bg-red-200 transition duration-500 ${
+        className={`flex flex-col items-center
+        feedback p-4 py-0 h-[200px] bg-red-200 transition duration-500 ${
           show ? "" : ""
         } `}
       >
@@ -33,7 +37,6 @@ const ReactPopup = (props: ReactPopupType) => {
             className="my-1"
           />
           <div>{thisBooking}</div>
-          {/* <div>{bookingId}</div> */}
           <button
             type="button"
             className="bg-white p-2 close button"
@@ -41,7 +44,15 @@ const ReactPopup = (props: ReactPopupType) => {
               updateComment({
                 bookingId: thisBooking,
                 data: { comment: commentText, rating: starValue },
-              });
+              })
+                .unwrap()
+                .then((res: { message: string }) => {
+                  toast.success(res.message);
+                })
+                .then(() => {
+                  setShow(false);
+                  refetch();
+                });
               // console.log({
               //   comment: commentText,
               //   rating: starValue,
@@ -64,4 +75,4 @@ const ReactPopup = (props: ReactPopupType) => {
   );
 };
 
-export default ReactPopup;
+export default CompleteBookingPopup;

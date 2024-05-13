@@ -138,6 +138,8 @@ export const apiSlice = createApi({
         url: `comment/${bookingId}`,
         body: data,
       }),
+      transformResponse: (response: { message: string; success: boolean }) =>
+        response.message,
     }),
     getUserProfile: builder.query({
       query: () => ({

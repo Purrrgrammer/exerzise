@@ -25,5 +25,11 @@ export const ProtectedRoute = ({
     return <Navigate to={redirectPath} replace />;
   }
 
-  return children ? children : <Outlet />;
+  return children ? (
+    children
+  ) : (
+    <Outlet />
+    // <ToastProvider>
+    // </ToastProvider>
+  );
 };

@@ -191,3 +191,30 @@ html {
 /* input[type="file"] {
   display: none;
 } */
+
+/* extracct */
+.switch {
+  left: 20px;
+  position: relative;
+  display: inline-block;
+  width: 160px;
+  height: 50px;
+}
+
+.gg .slider::before {
+  transform: translateX(51px);
+  width: 45px;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 40px;
+  width: 45px;
+  border: 1px solid black;
+  background-color: transparent;
+  left: 3px;
+  top: 8%;
+  transition: 0.4s;
+  pointer-events: none;
+}

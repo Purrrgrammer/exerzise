@@ -6,12 +6,7 @@ import List from "../components/List";
 import { useAppSelector } from "../store";
 
 const UserPage = () => {
-  // const user = findLocalUser("user", globalUser);
-  // console.log("logged in user", user);
-  // console.log("d user", initialState);
-
   const user = useAppSelector((state) => state.user);
-
   const [content, setContent] = useState<string>("profile");
   let renderedcontent;
 
@@ -48,6 +43,7 @@ const UserPage = () => {
           <div className="user-page-body">{renderedcontent}</div>
         </div>
       </div>
+
       <Footer />
     </>
   );

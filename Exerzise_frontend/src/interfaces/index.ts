@@ -191,31 +191,6 @@ export interface CoachTimeResponse {
   price: number;
 }
 
-export interface ReactPopupType {
-  show: boolean;
-  thisBooking: string;
-  bookingId: string;
-  starValue: number | null | undefined;
-  commentText: string | null | undefined;
-  setStarValue: React.Dispatch<React.SetStateAction<number>>;
-  setCommentText: React.Dispatch<React.SetStateAction<string>>;
-  updateComment: any;
-  /*    UseMutation<MutationDefinition<
-      any,
-      BaseQueryFn<
-        // string | FetchArgs,
-        unknown,
-        FetchBaseQueryError,
-        {},
-        FetchBaseQueryMeta
-      >,
-      "users",
-      any,
-      "api"
-    >
-  >*/
-}
-
 export interface FormValueType {
   name: string;
   label: string;

@@ -6,43 +6,34 @@ import {
   useUpdateCommentMutation,
 } from "../features/api/apiSlice";
 import { BookingDataResponse } from "../interfaces";
-import ReactPopup from "./../components/ReactPopup";
+import CompleteBookingPopup from "./../components/Popup_Complete";
 import Blank from "./Blank";
-import StatusPopup from "./StatusPopup";
+import StatusPopup from "./Popup_Status";
 import { useAppSelector } from "../store";
+import { statusBackground, statusButton } from "../base";
 
 const Booking = () => {
   const user = useAppSelector((state) => state.user);
-
   const [starValue, setStarValue] = useState<number>(3);
   const [thisBooking, setThisbooking] = useState<string>(" ");
   const [commentText, setCommentText] = useState<string>(" ");
-
+  const [show, setShow] = useState(false);
   const [
     updateComment,
     // { isLoading: updating }, // This is the destructured mutation result
   ] = useUpdateCommentMutation();
-  const { data, isLoading } = useGetBookingsQuery({
+  const { data, isLoading, refetch } = useGetBookingsQuery({
     userId: user.userId,
     // userId: localStorage.getItem("user")
     //   ? JSON.parse(localStorage.getItem("user")!).userId
     //   : null,
     allDone: false,
   });
-  useEffect(() => {
-    console.log("bookings data", data);
-    console.log("user fron store", user);
-  }, [user]);
 
-  const statusButton = ["cancel", "ongoing", "done"];
-  const statusBackground = [
-    { name: "cancel", color: "bg-red-500" },
-    { name: "ongoing", color: "bg-yellow-200" },
-    { name: "done", color: "bg-lime-400" },
-  ];
-  const [show, setShow] = useState(false);
   // const [showStatus, setShowStatus] = useState(false);
-
+  useEffect(() => {
+    refetch();
+  }, [data]);
   return (
     <>
       {isLoading ? (
@@ -119,6 +110,7 @@ const Booking = () => {
                       key={index}
                       status={status}
                       bookingId={bk.bookingId}
+                      refetch={refetch}
                       // setShowStatus={setShowStatus}
                       // showStatus={showStatus}
                     />
@@ -134,8 +126,10 @@ const Booking = () => {
                   >
                     {bk.bookingId}
                   </button>
-                  <ReactPopup
+                  <CompleteBookingPopup
+                    refetch={refetch}
                     show={show}
+                    setShow={setShow}
                     // bookingId={bk.bookingId}
                     thisBooking={thisBooking}
                     starValue={starValue}
