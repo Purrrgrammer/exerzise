@@ -1,5 +1,5 @@
-const pool = require("../db/pool");
-const common = require("../common/common");
+const pool = require("../../db/pool");
+const common = require("../../common/common");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -44,11 +44,12 @@ const upload = async (req, res) => {
     const response = await pool.query(
       `UPDATE users SET user_image = '${newFileName}' WHERE user_id = '${userId}'`
     );
-    return res.status(200).send({
+    res.status(200).send({
       message: `File ${newFileName} Uploaded Successfully`,
     });
   } catch (error) {
     console.log(error);
+    res.status(500);
   } finally {
   }
   return res.end();

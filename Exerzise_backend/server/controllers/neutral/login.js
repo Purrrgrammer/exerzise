@@ -1,15 +1,15 @@
-const pool = require("../db/pool");
-const common = require("../common/common");
+const pool = require("../../db/pool");
+const common = require("../../common/common");
 
 const login = async (req, res) => {
   let responseData = {};
   let input = req.body;
+  let { username } = input;
   console.log(`input`, input);
 
   try {
-    let findUser = `SELECT * FROM public.users WHERE username = $1;`;
-    let userParam = [input.username];
-    const serverResponse = await pool.query(findUser, userParam);
+    let findUser = `SELECT * FROM public.users WHERE username = '${username}'`;
+    const serverResponse = await pool.query(findUser);
     // if (serverResponse.rows.length === 0) {
     //   responseData.success = false;
     //   responseData.message = "user not found case1 l";

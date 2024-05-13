@@ -1,5 +1,5 @@
-const pool = require("../db/pool");
-const common = require("../common/common");
+const pool = require("../../db/pool");
+const common = require("../../common/common");
 const { v4: uuidv4 } = require("uuid");
 
 const register = async (req, res) => {

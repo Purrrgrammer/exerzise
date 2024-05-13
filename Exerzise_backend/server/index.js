@@ -1,26 +1,26 @@
 const express = require("express");
+const checkUserAuthPage = require("./middleware/authPage");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
-const getUser = require("./function/getusers");
+const getUser = require("./controllers/getusers");
 const cors = require("cors");
-const register = require("./function/register");
-const getCoaches = require("./function/get_coaches");
-const login = require("./function/login");
-const getCoach = require("./function/get_coach");
-const setCoachSchedule = require("./function/set_coach_schedule");
-const bookCoachTime = require("./function/book_coach_time");
-const getCoachSchedule = require("./function/get_coach_schedule");
-const getUserBookings = require("./function/get_bookings");
-const getCoachTime = require("./function/get_coach_time");
-const updateStatus = require("./function/status_update");
-const postComment = require("./function/post_comment");
+const register = require("./controllers/neutral/register");
+const getCoaches = require("./controllers/get_coaches");
+const login = require("./controllers/neutral/login");
+const getCoach = require("./controllers/get_coach");
+const setCoachSchedule = require("./controllers/set_coach_schedule");
+const bookCoachTime = require("./controllers/book_coach_time");
+const getCoachSchedule = require("./controllers/get_coach_schedule");
+const getUserBookings = require("./controllers/get_bookings");
+const getCoachTime = require("./controllers/get_coach_time");
+const updateStatus = require("./controllers/status_update");
+const postComment = require("./controllers/post_comment");
 const verifyAuthToken = require("./middleware/auth");
-const getUserProfile = require("./function/get_user_profile");
-const deleteSchedule = require("./function/delete_coach_schedule");
-const upload = require("./function/upload");
+const getUserProfile = require("./controllers/get_user_profile");
+const deleteSchedule = require("./controllers/delete_coach_schedule");
+const upload = require("./controllers/neutral/upload");
 const multer = require("multer");
-
 // middleware => app.use
 app.use(cors());
 // get data from client side when building fullstack app => why? =>
@@ -28,6 +28,8 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.static("./server/public"));
+app.use(checkUserAuthPage, require("./routes/rootRoutes"));
+
 app.use((req, res, next) => {
   // only we allow or provide
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -40,59 +42,48 @@ app.use((req, res, next) => {
   res.header("Access-Control-Expose-Headers", "x-access-token,x-refresh-token");
   next();
 });
-
-app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
-});
 //for all
-app.post("/register", async (req, res) => {
-  register(req, res);
-});
-
-app.post("/login", async (req, res) => {
-  login(req, res);
-});
+// except one route
 // token
-app.get("/user/all", verifyAuthToken, async (req, res) => {
+app.get("/user/all", async (req, res) => {
   getUser(req, res);
 });
+app.get("/user", async (req, res) => {
+  getUserProfile(req, res);
+});
 //coach only
-app.post("/coach/schedule/:coachId", verifyAuthToken, async (req, res) => {
+app.post("/coach/schedule/:coachId", async (req, res) => {
   setCoachSchedule(req, res);
 });
 //user only
-app.post("/coach/:coachId", verifyAuthToken, async (req, res) => {
+app.post("/coach/:coachId", async (req, res) => {
   bookCoachTime(req, res);
 });
-app.get("/coach/:userId", verifyAuthToken, async (req, res) => {
+app.get("/coach/:userId", async (req, res) => {
   getCoach(req, res); //by ID
 });
-app.get("/coachschedule/:coachId", verifyAuthToken, async (req, res) => {
-  getCoachSchedule(req, res);
-});
-app.get("/coaches", verifyAuthToken, async (req, res) => {
+app.get("/coaches", async (req, res) => {
   getCoaches(req, res);
 });
+app.get("/coachschedule/:coachId", async (req, res) => {
+  getCoachSchedule(req, res);
+});
 
-app.get("/schedule/:userId/:allDone", verifyAuthToken, async (req, res) => {
+app.get("/schedule/:userId/:allDone", async (req, res) => {
   getUserBookings(req, res);
 });
 // booking updating
-app.put("/schedule/:bookingId", verifyAuthToken, async (req, res) => {
+app.put("/schedule/:bookingId", async (req, res) => {
   updateStatus(req, res);
 });
-
-app.get("/coachtime/:coachId", verifyAuthToken, async (req, res) => {
+app.delete("/schedule/delete/:coachId", async (req, res) => {
+  deleteSchedule(req, res);
+});
+app.get("/coachtime/:coachId", async (req, res) => {
   getCoachTime(req, res);
 });
-app.put("/comment/:bookingId", verifyAuthToken, async (req, res) => {
+app.put("/comment/:bookingId", async (req, res) => {
   postComment(req, res);
-});
-app.get("/user", verifyAuthToken, async (req, res) => {
-  getUserProfile(req, res);
-});
-app.delete("/schedule/delete/:coachId", verifyAuthToken, async (req, res) => {
-  deleteSchedule(req, res);
 });
 
 //multer for file uploading
@@ -104,13 +95,17 @@ const storage = multer.diskStorage({
     return cb(null, `${Date.now()}_${req.params.userId}`);
   },
 });
+
 const uploadd = multer({ storage });
 
-app.post(
-  "/upload/:userId",
-  verifyAuthToken,
-  uploadd.single("file"),
-  async (req, res) => {
-    upload(req, res);
-  }
-);
+app.use("/upload", uploadd.single("file"), require("./routes/uploadRoutes"));
+app.use("/login", require("./routes/loginRoute"));
+app.use("/register", require("./routes/registerRoutes"));
+app.use("/upload", require("./routes/uploadRoutes"));
+
+app.all("*", checkUserAuthPage, (req, res, next) => {
+  res.json({ message: "some err occurs" });
+});
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
+});

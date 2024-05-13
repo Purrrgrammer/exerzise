@@ -1,5 +1,5 @@
 const pool = require("../db/pool");
-const utilityFunctions = require("./utilityfunction");
+const utilityFunctions = require("../common/utilityfunction");
 const { v4: uuidv4 } = require("uuid");
 
 const setCoachSchedule = async (req, res) => {

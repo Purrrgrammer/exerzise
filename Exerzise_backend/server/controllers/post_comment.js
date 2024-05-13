@@ -1,6 +1,4 @@
 const pool = require("../db/pool");
-const common = require("../common/common");
-
 const deleteSchedule = async (req, res) => {
   let responseData = {};
   const input = req.body;
@@ -12,13 +10,15 @@ const deleteSchedule = async (req, res) => {
     SET comment='${input.comment}', rating=${input.rating}, user_status='done', coach_status='done' WHERE booking_id = $1`,
       [bookingId]
     );
-    responseData.data = response;
+    // responseData.data = response;
+    responseData.message = `Booking ${bookingId} is completed`;
+    return res.status(200).send(responseData); //success
   } catch (error) {
     responseData.success = false;
     console.log(error);
+    res.status(5000).send(responseData); //success
   } finally {
   }
-  res.status(200).send(responseData); //success
   return res.end();
 };
 

@@ -8,7 +8,6 @@ export const dayNames = [
   "Saturday",
 ];
 
-
 export const backgroundImages = [
   {
     name: "fitness",
