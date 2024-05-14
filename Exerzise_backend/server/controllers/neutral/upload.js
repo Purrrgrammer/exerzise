@@ -1,5 +1,4 @@
 const pool = require("../../db/pool");
-const common = require("../../common/common");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -10,7 +9,7 @@ const upload = async (req, res) => {
   const userId = req.params.userId;
   const imageFile = req.file;
   if (!imageFile) {
-    return res.status(400).send({ message: "Please Upload a file." });
+    return res.status(400).json({ message: "Please Upload a file." });
   }
   try {
     const rootFolder =
@@ -44,12 +43,12 @@ const upload = async (req, res) => {
     const response = await pool.query(
       `UPDATE users SET user_image = '${newFileName}' WHERE user_id = '${userId}'`
     );
-    res.status(200).send({
+    res.json(200).send({
       message: `File ${newFileName} Uploaded Successfully`,
     });
   } catch (error) {
     console.log(error);
-    res.status(500);
+    res.json(500);
   } finally {
   }
   return res.end();

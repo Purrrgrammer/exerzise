@@ -1,8 +1,9 @@
 const pool = require("../db/pool");
-const deleteSchedule = async (req, res) => {
+const completeBooking = async (req, res) => {
   let responseData = {};
   const input = req.body;
-  const bookingId = req.params.bookingId;
+  const { bookingId } = req.params;
+  // const bookingId = req.params.bookingId;
   console.log("bookID", bookingId);
   try {
     const response = await pool.query(
@@ -12,14 +13,14 @@ const deleteSchedule = async (req, res) => {
     );
     // responseData.data = response;
     responseData.message = `Booking ${bookingId} is completed`;
-    return res.status(200).send(responseData); //success
+    res.status(200).json(responseData); //success
   } catch (error) {
     responseData.success = false;
     console.log(error);
-    res.status(5000).send(responseData); //success
+    res.status(5000).json(responseData); //success
   } finally {
   }
   return res.end();
 };
 
-module.exports = deleteSchedule;
+module.exports = completeBooking;

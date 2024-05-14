@@ -64,7 +64,6 @@ const getCoachSchedule = async (req, res) => {
   // console.log(`coachId`, req.params.coachId);
   // console.log(`dayQuery`, dayQuery);
   // console.log(`dateQuery`, dateQuery);
-
   const param = [req.params.coachId, dayQuery, dateQuery];
   // console.log(`param`, param);
   try {
@@ -89,7 +88,6 @@ const getCoachSchedule = async (req, res) => {
       ratingCount: i.done_count,
       //
     }));
-
     responseData.timeData = response.rows.map((i) => ({
       timeId: i.time_id,
       coachId: i.user_id,
@@ -109,7 +107,6 @@ const getCoachSchedule = async (req, res) => {
       ); // 30 or 60;
       // console.log("all coach generatedIntervals", generatedIntervals);
       // console.log("param1", param[1]);
-
       const bookedresponse = (
         await pool.query(`SELECT * FROM bookings WHERE date = $1`, [param[2]])
       ).rows;
@@ -119,18 +116,16 @@ const getCoachSchedule = async (req, res) => {
       );
       // // create all free is time and filter by booking Time
       // console.log("booked responses", bookedresponse);
-
       console.log("availableIntervals", availableIntervals);
       console.log(`generateTimeIntervals`, generatedIntervals);
       responseData.availableTime = availableIntervals ? availableIntervals : [];
     } else {
       responseData.availableTime = [];
     }
-
     // RESPONSES
     // responseData.bookedresponse = bookedresponse;
     responseData.message = "successfully fetched";
-    return res.status(200).send(responseData); //success
+    res.status(200).send(responseData); //success
   } catch (error) {
     responseData.messsage = "something wrong";
     responseData.success = false;
@@ -138,6 +133,6 @@ const getCoachSchedule = async (req, res) => {
     console.log(error);
   } finally {
   }
-  return res.end();
+  res.end();
 };
 module.exports = getCoachSchedule;
