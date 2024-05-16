@@ -19,7 +19,7 @@ export const apiSlice = createApi({
       // If we have a token set in the state, let's assume that we should be passing it.
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
-      }
+      } 
       return headers;
     },
   }),
@@ -71,7 +71,7 @@ export const apiSlice = createApi({
       any,
       { coachId: string | undefined; date: string }
     >({
-      query: (arg) => `coachschedule/${arg.coachId}?time=30&date=${arg.date}`,
+      query: (arg) => `coach/schedule/${arg.coachId}?time=30&date=${arg.date}`,
       providesTags: ["users"],
       transformResponse: (response: {
         data: CoachDataType[];
@@ -92,7 +92,7 @@ export const apiSlice = createApi({
     getBookings: builder.query({
       query: ({ userId, allDone }) => ({
         method: "GET",
-        url: `schedule/${userId}/${allDone}`,
+        url: `user/schedule/${userId}/${allDone}`,
         params: { userId, allDone },
         transformResponse: (response: {
           data: BookingDataResponse[];
@@ -106,7 +106,7 @@ export const apiSlice = createApi({
       }) => response.data,
     }),
     getCoachTime: builder.query({
-      query: (coachId) => `coachtime/${coachId}`,
+      query: (coachId) => `coach/time/${coachId}`,
       providesTags: ["users"],
       transformResponse: (response: {
         data: CoachTimeResponse[];
