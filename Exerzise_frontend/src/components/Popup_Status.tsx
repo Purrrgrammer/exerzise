@@ -4,8 +4,11 @@ import { useUpdateBookingMutation } from "../features/api/apiSlice";
 import { toast } from "react-toastify";
 import { StatusPopupPropsType } from "../interfaces/propTypes";
 import { useState } from "react";
+import { useAppSelector } from "../store";
 
-const StatusPopup = ({ status, bookingId }: StatusPopupPropsType) => {
+const StatusPopup = ({ status, bookingId, refetch }: StatusPopupPropsType) => {
+  const user = useAppSelector((state) => state.user);
+
   const [
     updateBooking,
     // { isLoading: isUpdating }, // This is the destructured mutation result
@@ -35,17 +38,29 @@ const StatusPopup = ({ status, bookingId }: StatusPopupPropsType) => {
             <button
               className="bg-red-200 p-2 close button"
               onClick={() => {
-                updateBooking({ bookingId: bookingId, status: status })
+                updateBooking({
+                  bookingId: bookingId,
+                  status: status,
+                  role: user.role,
+                })
                   .unwrap()
                   .then((response) => {
-                    const resolveAfter3Sec = new Promise((resolve) => {
-                      setTimeout(resolve, 3000); //get true from responseData.success
+                    const id = toast.loading("Updating Booking Status...");
+                    toast.update(id, {
+                      render: response.message,
+                      type: "success",
+                      isLoading: false,
+                      autoClose: 2000,
                     });
-                    toast.promise(resolveAfter3Sec, {
-                      pending: "We are updating booking tatus, Please Wait",
-                      success: response.message,
-                      error: "the update has been rejected 🤯",
-                    });
+                    // const resolveAfter3Sec = new Promise((resolve) => {
+                    //   setTimeout(resolve, 3000); //get true from responseData.success
+                    // });
+                    // toast.promise(resolveAfter3Sec, {
+                    //   pending: "We are updating booking tatus, Please Wait",
+                    //   success: response.message,
+                    //   error: "the update has been rejected 🤯",
+                    // });
+                    refetch();
                   })
                   .catch((err) => {
                     toast.error(err.data.message);

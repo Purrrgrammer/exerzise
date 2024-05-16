@@ -63,7 +63,7 @@ const login = async (req, res) => {
     responseData.success = false;
     responseData.message = "Something Wrong Please Try Again";
     console.log(error);
-    return res.status(500).return(responseData); //success
+    res.status(500).json(responseData); //success
   } finally {
   }
   // res.status(200).send(responseData); //success

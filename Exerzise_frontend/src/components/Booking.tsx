@@ -40,6 +40,7 @@ const Booking = () => {
         "loading"
       ) : data && data.length !== 0 ? (
         <div className="grid grid-cols-1 relative">
+          {user.role === "user" ? "For User" : "For Coach"}
           {data.map((bk: BookingDataResponse, index: number) => (
             <div
               key={index}
@@ -49,17 +50,21 @@ const Booking = () => {
                 <img
                   className="hover:scale-150 md:hover:scale-125 transition duration-500 cursor-pointer "
                   src={`${
-                    bk.coachImage
+                    user.role === "user"
                       ? bk.coachImage
+                      : user.role === "coach"
+                      ? bk.userImage
                       : "https://library.sportingnews.com/styles/crop_style_16_9_desktop_webp/s3/2023-06/nba-plain--e3aafb30-bbd5-43a5-bbb0-464f1433b74d.jpeg.webp"
                   }`}
-                  alt="coachprofile"
+                  alt={user.role === "user" ? "coach profile" : "user profile"}
                 />
                 <div className="absolute text-red-500 bottom-3 text-md md:text-3xl m-1 md:m-3">
                   <div>
-                    {bk.coachFirstName} {bk.coachLastName}
+                    {user.role === "user"
+                      ? `Coach ${bk.coachFirstName} ${bk.coachLastName}`
+                      : `User ${bk.userFirstName} ${bk.userLastName}`}
                   </div>
-                  #{bk.coachId}
+                  {user.role === "user" ? `#${bk.coachId}` : `#${bk.userId}`}
                 </div>
               </div>
               <div className="bg-slate-200 p-4 flex flex-col items-start justify-between relative z-2 ">
@@ -75,7 +80,10 @@ const Booking = () => {
                         : null
                     }`}
                   >
-                    <div>{bk.coachStatus}</div>
+                    <div className="flex gap-2">
+                      <div> Coach Status:</div>
+                      <div> {bk.coachStatus}</div>
+                    </div>
                   </div>
                   <div
                     className={`self-end text-3xl p-3 ${
@@ -88,7 +96,10 @@ const Booking = () => {
                         : null
                     }`}
                   >
-                    <div>{bk.userStatus}</div>
+                    <div className="flex gap-2">
+                      <div> User Status:</div>
+                      <div> {bk.userStatus}</div>
+                    </div>
                   </div>
                 </div>
 
@@ -100,7 +111,11 @@ const Booking = () => {
                   </div>
                   <div>Session: {bk.session === null ? " - " : bk.session}</div>
                   <div>Booking ID: {bk.bookingId}</div>
-                  <div>Coach Phone Number: {bk.coachPhoneNumber}</div>
+                  {user.role === "user" ? (
+                    <div>Coach Phone Number: {bk.coachPhoneNumber}</div>
+                  ) : (
+                    <div>User Phone Number: {bk.userphonenumber}</div>
+                  )}{" "}
                   {/* <div>Location:</div> */}
                 </div>
                 <div className="self-end text-2xl m-4">$ {bk.price}</div>

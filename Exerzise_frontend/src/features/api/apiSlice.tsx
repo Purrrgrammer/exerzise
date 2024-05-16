@@ -124,12 +124,14 @@ export const apiSlice = createApi({
       invalidatesTags: ["Booking"],
     }),
     updateBooking: builder.mutation({
-      query: ({ bookingId, status }) => ({
-        method: "PUT",
-        url: `schedule/${bookingId}`,
+      query: ({ bookingId, status, role }) => ({
+        method: "PATCH",
+        url: `schedule/${bookingId}?role=${role}`,
         body: { status },
         params: bookingId,
+        providesTags: ["Schedule"],
       }),
+      invalidatesTags: ["Schedule"],
     }),
     updateComment: builder.mutation({
       query: ({ bookingId, data }) => ({
