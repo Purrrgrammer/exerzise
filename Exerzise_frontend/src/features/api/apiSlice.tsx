@@ -19,11 +19,11 @@ export const apiSlice = createApi({
       // If we have a token set in the state, let's assume that we should be passing it.
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
-      } 
+      }
       return headers;
     },
   }),
-  tagTypes: ["users"],
+  tagTypes: ["User", "Booking", "Schedule"],
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (form: FormArrType) => ({
@@ -31,7 +31,6 @@ export const apiSlice = createApi({
         method: "POST",
         body: form,
       }),
-      invalidatesTags: ["users"],
       transformResponse: (response: { success: boolean; message: string }) =>
         response,
     }),
@@ -52,16 +51,15 @@ export const apiSlice = createApi({
     }),
     getAllCoaches: builder.query({
       query: () => `coaches`,
-      providesTags: ["users"],
+      providesTags: ["User"],
       transformResponse: (response: {
         data: CoachDataType[];
         success: boolean;
       }) => response.data,
     }),
-
     getCoach: builder.query({
       query: (userId) => `coach/${userId}`,
-      providesTags: (_result, _error, id) => [{ type: "users", id }],
+      providesTags: (_result, _error, id) => [{ type: "User", id }],
       transformResponse: (response: {
         data: CoachDataType[];
         success: boolean;
@@ -72,7 +70,6 @@ export const apiSlice = createApi({
       { coachId: string | undefined; date: string }
     >({
       query: (arg) => `coach/schedule/${arg.coachId}?time=30&date=${arg.date}`,
-      providesTags: ["users"],
       transformResponse: (response: {
         data: CoachDataType[];
         timeData: CoachTimeResponse[];
@@ -88,6 +85,7 @@ export const apiSlice = createApi({
         body: timeAvailable,
         params: coachId,
       }),
+      invalidatesTags: ["Schedule"],
     }),
     getBookings: builder.query({
       query: ({ userId, allDone }) => ({
@@ -99,7 +97,7 @@ export const apiSlice = createApi({
           success: boolean;
         }) => response.data,
       }),
-      providesTags: (_result, _error, id) => [{ type: "users", id }],
+      providesTags: (_result, _error, id) => [{ type: "User", id }],
       transformResponse: (response: {
         data: BookingDataResponse[];
         success: boolean;
@@ -107,7 +105,7 @@ export const apiSlice = createApi({
     }),
     getCoachTime: builder.query({
       query: (coachId) => `coach/time/${coachId}`,
-      providesTags: ["users"],
+      providesTags: ["User"],
       transformResponse: (response: {
         data: CoachTimeResponse[];
         success: boolean;
@@ -123,6 +121,7 @@ export const apiSlice = createApi({
       }),
       transformResponse: (response: { message: "string"; success: boolean }) =>
         response,
+      invalidatesTags: ["Booking"],
     }),
     updateBooking: builder.mutation({
       query: ({ bookingId, status }) => ({
@@ -146,7 +145,7 @@ export const apiSlice = createApi({
         method: "GET",
         url: `user`,
       }),
-      providesTags: (_result, _error, id) => [{ type: "users", id }],
+      providesTags: (_result, _error, id) => [{ type: "User", id }],
       transformResponse: (response: {
         data: UserLoginResponse;
         success: boolean;
