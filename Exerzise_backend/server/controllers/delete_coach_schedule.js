@@ -2,6 +2,8 @@ const pool = require("../db/pool");
 const common = require("../common/common");
 
 const deleteSchedule = async (req, res) => {
+  console.log(`deleting status`);
+
   let responseData = {};
   const coachId = req.params.coachId;
   const input = req.body;

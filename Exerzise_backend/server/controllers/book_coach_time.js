@@ -2,8 +2,8 @@ const pool = require("../db/pool");
 const { v4: uuidv4 } = require("uuid");
 
 const bookCoachTime = async (req, res) => {
-  let responseData = {};
   let isFound = false;
+  let responseData = {};
   let input = req.body;
   let coachParam = req.params.coachId;
   try {
@@ -21,10 +21,12 @@ const bookCoachTime = async (req, res) => {
       const dupeResponse = await pool.query(sqlFind, findParam);
       if (dupeResponse.rowCount > 0) {
         isFound = true;
-        responseData.message = "found duplicate bookings by the time";
-        console.log(responseData.message);
         responseData.success = false;
+        responseData.message =
+          "Duplicate bookings found, please select new time";
+        console.log(responseData.message);
         console.log("dupeResponse", dupeResponse.rowCount > 0);
+        return res.status(409).send(responseData);
       }
       if (isFound === false) {
         let sql = `INSERT INTO bookings (booking_id,user_id,coach_id,
@@ -55,11 +57,11 @@ VALUES ($1, $2, $3, $4, $5, $6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
         const response = await pool.query(sql, param);
         result.push(response);
         responseData.success = true;
-        responseData.message = "successfully booked";
+        responseData.message = "Successfully Booked";
         console.log(responseData);
       } else {
         responseData.success = false;
-        responseData.message = "found duplicate";
+        responseData.message = "Found Duplicate";
         console.log(responseData);
         return res.status(409).send(responseData);
       }
@@ -70,6 +72,7 @@ VALUES ($1, $2, $3, $4, $5, $6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
     console.log(error);
     return res.status(400).send(responseData);
   } finally {
+    res.end();
   }
 };
 

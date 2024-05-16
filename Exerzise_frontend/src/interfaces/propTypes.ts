@@ -5,8 +5,35 @@ export interface StatusPopupPropsType {
   key: number;
   status: string;
   bookingId: string;
+  refetch?: any;
   // showStatus: boolean;
   // setShowStatus: Dispatch<SetStateAction<boolean>>;
+}
+export interface ReactPopupType {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  thisBooking: string;
+  bookingId: string;
+  starValue: number | null | undefined;
+  commentText: string | null | undefined;
+  setStarValue: React.Dispatch<React.SetStateAction<number>>;
+  setCommentText: React.Dispatch<React.SetStateAction<string>>;
+  updateComment: any;
+  refetch?: any;
+  /*    UseMutation<MutationDefinition<
+  any,
+      BaseQueryFn<
+        // string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      "users",
+      any,
+      "api"
+    >
+  >*/
 }
 export interface SearchBarPropsType {
   placeholder: string;

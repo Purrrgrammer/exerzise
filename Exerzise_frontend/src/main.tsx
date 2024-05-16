@@ -27,6 +27,7 @@ import { Provider, useDispatch } from "react-redux";
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { apiSlice } from "./features/api/apiSlice";
 import { setToken } from "./features/slices/tokenSlice";
+import AlertBox from "./components/AlertBox";
 
 // const userlocal = localStorage.getItem("user");
 // const user = userlocal
@@ -108,6 +109,18 @@ const router = createBrowserRouter([
   },
 ]);
 
+interface ToastProviderProps {
+  children: React.ReactNode;
+}
+export const ToastProvider = ({ children }: ToastProviderProps) => {
+  return (
+    <>
+      {children}
+      <AlertBox />
+    </>
+  );
+};
+
 const Test = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -120,7 +133,11 @@ const Test = ({ children }: { children: ReactNode }) => {
     //   dispatch(setToken({ token: null }));
     // }
   }, []);
-  return children;
+  return (
+    <>
+      <ToastProvider>{children};</ToastProvider>
+    </>
+  );
 };
 
 // const selectRouter = localStorage.getItem("user")! ? coachRouter : commonRouter;
@@ -129,11 +146,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ApiProvider api={apiSlice}>
       <Provider store={store}>
-        {/* <BrowserRouter>
-          <App /> */}
         <Test>
           <RouterProvider router={router} />
         </Test>
+        {/* <BrowserRouter>
+          <App /> */}
         {/* </BrowserRouter> */}
       </Provider>
     </ApiProvider>

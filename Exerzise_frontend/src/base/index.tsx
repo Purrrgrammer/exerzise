@@ -8,21 +8,6 @@ export const dayNames = [
   "Saturday",
 ];
 
-export const createTimeTable = () => {
-  const timeRange = [];
-
-  const formatting = (number: number) => {
-    if (number < 10) {
-      return `0${number}:00 - 0${number + 1}:00`;
-    }
-    return `${number}:00 - ${number + 1 === 24 ? "00" : number + 1}:00`;
-  };
-  for (let i = 0; i <= 24; i++) {
-    timeRange.push({ time: formatting(i) });
-  }
-  return timeRange.slice(0, timeRange.length - 1);
-};
-
 export const backgroundImages = [
   {
     name: "fitness",
@@ -37,6 +22,8 @@ export const backgroundImages = [
     bg: "https://i.pinimg.com/originals/30/28/79/302879c6f08ecd109011a3e13f4f81e3.jpg",
   },
 ];
+
+// Register/Login Page
 export const registerform = [
   {
     name: "firstname",
@@ -87,4 +74,11 @@ export const loginForm = [
   },
 ];
 
+// Booking Page
+export const statusButton = ["cancel", "ongoing", "done"];
+export const statusBackground = [
+  { name: "cancel", color: "bg-red-500" },
+  { name: "ongoing", color: "bg-yellow-200" },
+  { name: "done", color: "bg-lime-400" },
+];
 // export const initialRegisterform = getInitialFormObjects(registerform);

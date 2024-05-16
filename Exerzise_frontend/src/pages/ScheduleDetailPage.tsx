@@ -7,6 +7,7 @@ const ScheduleDetailPage = () => {
     <>
       <Navbar />
       <Booking />
+
       <Footer />
     </>
   );

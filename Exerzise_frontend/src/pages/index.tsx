@@ -2,7 +2,6 @@ import Root from "./Root.tsx";
 import HomePage from "./HomePage.tsx";
 import AboutPage from "./AboutPage.tsx";
 import Schedule from "./Schedule.tsx";
-
 import ActivitiesPage from "./ActivitiesPage";
 import Blog from "./BlogPage";
 import BlogDetail from "./BlogDetail";

@@ -1,15 +1,15 @@
-const pool = require("../db/pool");
-const common = require("../common/common");
+const pool = require("../../db/pool");
+const common = require("../../common/common");
 
 const login = async (req, res) => {
   let responseData = {};
   let input = req.body;
+  let { username } = input;
   console.log(`input`, input);
 
   try {
-    let findUser = `SELECT * FROM public.users WHERE username = $1;`;
-    let userParam = [input.username];
-    const serverResponse = await pool.query(findUser, userParam);
+    let findUser = `SELECT * FROM public.users WHERE username = '${username}'`;
+    const serverResponse = await pool.query(findUser);
     // if (serverResponse.rows.length === 0) {
     //   responseData.success = false;
     //   responseData.message = "user not found case1 l";
@@ -21,7 +21,7 @@ const login = async (req, res) => {
       // user not found
       responseData.success = false;
       responseData.message = "User is not found";
-      return res.status(403).send(responseData); //success
+      return res.status(403).json(responseData); //success
     } else {
       console.log("user found");
       const decryptedPassword = await common.passwordExc.decryptPassword(
@@ -36,7 +36,7 @@ const login = async (req, res) => {
         console.log("password not matched");
         responseData.success = false;
         responseData.message = "Password is not matched";
-        return res.status(403).send(responseData); //success
+        return res.status(403).json(responseData); //success
       } else {
         //password matched login cleared
         console.log("password matched");
@@ -56,14 +56,14 @@ const login = async (req, res) => {
         responseData._token = await common.tokenExc.generateToken(
           responseData.data
         );
-        return res.status(200).send(responseData); //success
+        res.status(200).json(responseData); //success
       }
     }
   } catch (error) {
     responseData.success = false;
     responseData.message = "Something Wrong Please Try Again";
     console.log(error);
-    return res.status(500).send(responseData); //success
+    return res.status(500).return(responseData); //success
   } finally {
   }
   // res.status(200).send(responseData); //success

@@ -2,7 +2,7 @@ const pool = require("../db/pool");
 
 const getCoach = async (req, res) => {
   let responseData = {};
-  const userId = req.params.userId;
+  const { userId } = req.params;
   // console.log(`param`, userId);
   try {
     let input = req.body;
@@ -31,12 +31,12 @@ FROM users u left join bookings b on u.user_id = b.coach_id WHERE u.user_id = $1
         price: i.price,
       }))
       .filter((el) => el.userId === userId);
-    res.status(200).send(responseData); //success
+    res.status(200).json(responseData); //success
   } catch (error) {
     responseData.messsage = "something wrong";
-    res.status(500).send(responseData); //success
     responseData.success = false;
     console.log(error);
+    res.status(500).json(responseData); //success
   } finally {
   }
   return res.end();

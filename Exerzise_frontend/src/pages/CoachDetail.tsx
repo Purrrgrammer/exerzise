@@ -17,7 +17,6 @@ import {
 import { removeObjectValueDupe } from "../function";
 import CommonBtn from "../components/CommonBtn";
 import { CoachTimeResponse, ForUserBookingType } from "../interfaces";
-import AlertBox from "../components/AlertBox";
 import { toast } from "react-toastify";
 
 const CoachDetail = () => {
@@ -154,7 +153,6 @@ const CoachDetail = () => {
   return (
     <>
       <Navbar />
-      <AlertBox />
       <div className="flex justify-center my-10">
         <CoachCard coachData={data} />
         <div>

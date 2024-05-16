@@ -1,6 +1,6 @@
+import "../form/Form.css";
 import { SetStateAction, useState } from "react";
 import styled from "styled-components";
-import "../Form/Form.css";
 import { InputFromType } from "../../interfaces";
 
 export const StyledDiv = styled.div`

@@ -8,7 +8,6 @@ import {
   useRegisterMutation,
 } from "../../features/api/apiSlice";
 import { useNavigate } from "react-router-dom";
-import AlertBox from "../AlertBox";
 import { toast } from "react-toastify";
 import { setToken } from "../../features/slices/tokenSlice";
 import { Formprops } from "../../interfaces/propTypes";
@@ -41,7 +40,6 @@ export const Form1 = ({ setPageState, pageState }: Formprops) => {
       const resolveAfter3Sec = new Promise((resolve) => {
         setTimeout(resolve, 3000);
       });
-
       login(formValue)
         .unwrap()
         .then((loginResponse) => {
@@ -51,16 +49,18 @@ export const Form1 = ({ setPageState, pageState }: Formprops) => {
           toast
             .promise(resolveAfter3Sec, {
               pending: "Loggin In...",
-              success: `${loginResponse.message} `,
+              success: `${loginResponse.message} Welcome ${loginResponse.data.firstname} `,
               error: "Please Login Again",
             })
             .then(() => {
               navigate("/home");
             })
             .then(() => {
-              setTimeout(() => {
-                toast.success(`Welcome ${loginResponse.data.firstname}`);
-              }, 1);
+              // setTimeout(() => {
+              //   toast.success(
+              //     `${loginResponse.message} Welcome ${loginResponse.data.firstname}`
+              //   );
+              // }, 1);
             });
         })
         .catch((err) => {
@@ -83,7 +83,6 @@ export const Form1 = ({ setPageState, pageState }: Formprops) => {
 
   return (
     <>
-      <AlertBox />
       {isUpdating ? (
         " "
       ) : (

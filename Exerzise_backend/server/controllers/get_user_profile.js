@@ -3,9 +3,8 @@ const pool = require("../db/pool");
 
 const getUserProfile = async (req, res) => {
   let responseData = {};
-  const user = req._user;
-  console.log(`initiate user`);
-  
+  const user = req._user; //user from jwtauth
+
   try {
     const response = await pool.query(
       `SELECT * FROM users where user_id = '${user.userId}'`
@@ -23,7 +22,7 @@ const getUserProfile = async (req, res) => {
 
     responseData.success = true;
     responseData.data = result;
-    return res.status(200).send(responseData); //success
+    res.status(200).send(responseData); //success
   } catch (error) {
     console.log(error);
     responseData.success = true;

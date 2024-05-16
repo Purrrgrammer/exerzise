@@ -1,4 +1,20 @@
 import { dayNames } from "../base";
+
+export const createTimeTable = () => {
+  const timeRange = [];
+
+  const formatting = (number: number) => {
+    if (number < 10) {
+      return `0${number}:00 - 0${number + 1}:00`;
+    }
+    return `${number}:00 - ${number + 1 === 24 ? "00" : number + 1}:00`;
+  };
+  for (let i = 0; i <= 24; i++) {
+    timeRange.push({ time: formatting(i) });
+  }
+  return timeRange.slice(0, timeRange.length - 1);
+};
+
 import {
   CoachDataType,
   ForUserBookingType,

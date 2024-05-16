@@ -57,7 +57,6 @@ const CoachSchedule = () => {
         setDayAdded={setDayAdded}
         setCurrentDay={setCurrentDay}
       />
-
       <div className="grid grid-cols-3 gap-2 w-1/5 mx-auto place-content-center justify-items-center"></div>
       <div className="flex gap-x-4 justify-center items-center">
         <TimePickerValue
@@ -151,7 +150,6 @@ const CoachSchedule = () => {
         header={"Alter Time"}
         fn={clearThisDay}
       />
-
       <Footer />
     </>
   );
