@@ -11,12 +11,12 @@ const getUserBookings = async (req, res) => {
     //get by params
     const doneResponse = await pool.query(
       `SELECT * FROM bookings LEFT JOIN 
-      users on bookings.coach_id = users.user_id WHERE bookings.user_id = $1 and (coach_status = 'done' and user_status = 'done')`,
+      users on bookings.coach_id = users.user_id WHERE (bookings.user_id = $1 or bookings.coach_id = $1) and (coach_status = 'done' and user_status = 'done')`,
       [userId]
     );
     const response = await pool.query(
-      `SELECT * FROM bookings LEFT JOIN 
-      users on bookings.coach_id = users.user_id WHERE bookings.user_id = $1 and (NOT coach_status = 'done' or NOT user_status = 'done') `,
+      `SELECT * FROM bookings LEFT JOIN
+      users on bookings.coach_id = users.user_id WHERE (bookings.user_id = $1 or bookings.coach_id = $1) and (NOT coach_status = 'done' or NOT user_status = 'done') `,
       [userId]
     );
     //
@@ -43,9 +43,10 @@ const getUserBookings = async (req, res) => {
       coachFirstName: i.first_name, //joinable
       coachLastName: i.last_name, //joinable
       coachImage: `http://localhost:5000/images/${i.user_image}`, //joinable
+      userImage: `http://localhost:5000/images/${i.coach_image}`, //joinable
       // from joined table data to coach
       userId: userId,
-      // userphonenumber
+      userphonenumber: i.user_phonenumber,
       // userfirstname
       // userlastname
     }));

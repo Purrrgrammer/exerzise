@@ -3,7 +3,7 @@ const updateStatus = require("../controllers/status_update");
 const deleteSchedule = require("../controllers/delete_coach_schedule");
 const router = express.Router();
 
-router.route("/:bookingId").put(updateStatus);
+router.route("/:bookingId").patch(updateStatus);
 router.route("/delete/:coachId").delete(deleteSchedule);
 
 module.exports = router;
