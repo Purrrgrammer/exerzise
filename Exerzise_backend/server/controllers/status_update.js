@@ -1,6 +1,8 @@
 const pool = require("../db/pool");
 
 const updateStatus = async (req, res) => {
+  console.log(`updating status`);
+
   let responseData = {};
   let input = req.body;
   let bookingId = req.params.bookingId;
@@ -11,7 +13,7 @@ const updateStatus = async (req, res) => {
     let sql = `UPDATE bookings SET user_status
     = '${input.status}' WHERE booking_id = $1`;
     const response = await pool.query(sql, [bookingId]);
-    console.log("response", response);
+    // console.log("response", response);
     responseData.message = `set bookingid ${bookingId} status as ${input.status}, completed!`;
   } catch (error) {
     responseData.success = false;

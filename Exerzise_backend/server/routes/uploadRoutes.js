@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 });
 const uploadd = multer({ storage });
 
-const upload = require("../controllers/neutral/upload");
+const upload = require("../controllers/public/upload");
 
 router.route("/:userId").post(upload);
 

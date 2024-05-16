@@ -46,7 +46,7 @@ const setCoachSchedule = async (req, res) => {
     res.status(500).json(responseData);
   } finally {
   }
-  res.status(200).send(responseData); //success
+  // res.status(200).send(responseData); //success
 };
 
 module.exports = setCoachSchedule;

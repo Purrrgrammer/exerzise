@@ -6,15 +6,14 @@ const { log } = require("console");
 
 const upload = async (req, res) => {
   let responseData = {};
-  const userId = req.params.userId;
+  const { userId } = req.params;
   const imageFile = req.file;
+  const rootFolder =
+    "C:/Users/John/Desktop/Coding/projects/Exerzise/Exerzise_backend/server/public/images"; // Replace with the path to your root folder
   if (!imageFile) {
     return res.status(400).json({ message: "Please Upload a file." });
   }
   try {
-    const rootFolder =
-      "C:/Users/John/Desktop/Coding/projects/Exerzise/Exerzise_backend/server/public/images"; // Replace with the path to your root folder
-
     function findFilesByKeyword(rootFolder, keyword, results = []) {
       // Read the contents of the current folder
       const files = fs.readdirSync(rootFolder);
@@ -43,16 +42,15 @@ const upload = async (req, res) => {
     const response = await pool.query(
       `UPDATE users SET user_image = '${newFileName}' WHERE user_id = '${userId}'`
     );
-    res.json(200).send({
+    res.status(200).json({
       message: `File ${newFileName} Uploaded Successfully`,
     });
   } catch (error) {
     console.log(error);
-    res.json(500);
+    res.status(500);
   } finally {
   }
-  return res.end();
+  res.end();
 };
 
 module.exports = upload;
-("References");
