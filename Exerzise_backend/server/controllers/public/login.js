@@ -8,13 +8,11 @@ const login = async (req, res) => {
   console.log(`input`, input);
 
   try {
-    let findUser = `SELECT * FROM public.users WHERE username = '${username}'`;
+    let findUser = `SELECT * FROM users WHERE username = '${username}'`;
+    // let retries = 5;
+    // while (retries) {
+    //   try {
     const serverResponse = await pool.query(findUser);
-    // if (serverResponse.rows.length === 0) {
-    //   responseData.success = false;
-    //   responseData.message = "user not found case1 l";
-    //   return res.status(403).send(responseData); //success
-    // }
     console.log("serverResponse.password", serverResponse.rows[0].password);
     console.log("input.password", input.password);
     if (serverResponse.rowCount < 1) {
@@ -58,7 +56,20 @@ const login = async (req, res) => {
         );
         res.status(200).json(responseData); //success
       }
+      // }
+      // break;
+      // } catch (err) {
+      //   console.log(err);
+      //   retries -= 1;
+      //   console.log(`retries left: ${retries}`);
+      //   await new Promise((res) => setTimeout(res, 5000));
+      // }
     }
+    // if (serverResponse.rows.length === 0) {
+    //   responseData.success = false;
+    //   responseData.message = "user not found case1 l";
+    //   return res.status(403).send(responseData); //success
+    // }
   } catch (error) {
     responseData.success = false;
     responseData.message = "Something Wrong Please Try Again";

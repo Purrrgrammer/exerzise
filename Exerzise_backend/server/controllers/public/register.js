@@ -8,7 +8,7 @@ const register = async (req, res) => {
   try {
     let input = req.body;
     console.log(input);
-    let dupeUser = `SELECT * FROM public.users WHERE username = $1;`;
+    let dupeUser = `SELECT * FROM users WHERE username = $1;`;
     let dupeParam = [input.username]; //prepare sql query
     const dupeResponse = await pool.query(dupeUser, dupeParam);
 
@@ -22,7 +22,7 @@ const register = async (req, res) => {
         input.password
       );
       console.log("cryptedPassword", cryptedPassword);
-      let sql = `INSERT INTO public.users(
+      let sql = `INSERT INTO users(
 	user_id, username, password, first_name, last_name, role,session, detail,phone_number, user_image)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9,$10);`;
       const param = [
