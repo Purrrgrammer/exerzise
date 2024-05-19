@@ -16,6 +16,7 @@ export const createTimeTable = () => {
 };
 
 import {
+  BookingDataResponse,
   CoachDataType,
   ForUserBookingType,
   FormArrType,
@@ -130,5 +131,23 @@ export const filterSearch = (
         }
       }
     });
+  }
+};
+
+export const getExpired = (
+  inputbookingTime: string,
+  el: BookingDataResponse,
+  no: boolean
+) => {
+  const timeNow = new Date().getTime();
+  const bookingTime = new Date(inputbookingTime).getTime();
+  const timeDiff = bookingTime - timeNow;
+  console.log(el);
+  if (no === true) {
+    if (el.userStatus !== "cancel" && el.coachStatus !== "cancel") {
+      return el;
+    }
+  } else {
+    return timeDiff <= 0 ? el : null;
   }
 };

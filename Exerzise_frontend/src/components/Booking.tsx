@@ -11,8 +11,12 @@ import Blank from "./Blank";
 import StatusPopup from "./Popup_Status";
 import { useAppSelector } from "../store";
 import { statusBackground, statusButton } from "../base";
-
-const Booking = () => {
+import { getExpired } from "../function";
+export interface bookingProps {
+  expired?: boolean;
+  cancel?: boolean;
+}
+const Booking = ({ expired, cancel }: bookingProps) => {
   const user = useAppSelector((state) => state.user);
   const [starValue, setStarValue] = useState<number>(3);
   const [thisBooking, setThisbooking] = useState<string>(" ");
@@ -30,18 +34,27 @@ const Booking = () => {
     allDone: false,
   });
 
-  // const [showStatus, setShowStatus] = useState(false);
+  const displayData =
+    data && !expired && !cancel
+      ? data?.filter((el) => getExpired(el.date, el, true))
+      : cancel
+      ? data?.filter(
+          (el) => el.userStatus === "cancel" && el.coachStatus === "cancel"
+        )
+      : expired
+      ? data?.filter((el) => getExpired(el.date, el, false))
+      : null;
   useEffect(() => {
     refetch();
   }, [data]);
+
   return (
     <>
       {isLoading ? (
         "loading"
-      ) : data && data.length !== 0 ? (
+      ) : displayData && displayData.length !== 0 ? (
         <div className="grid grid-cols-1 relative">
-          {user.role === "user" ? "For User" : "For Coach"}
-          {data.map((bk: BookingDataResponse, index: number) => (
+          {displayData.map((bk: BookingDataResponse, index: number) => (
             <div
               key={index}
               className="flex justify-center flex-col md:flex-row m-4"
@@ -114,7 +127,7 @@ const Booking = () => {
                   {user.role === "user" ? (
                     <div>Coach Phone Number: {bk.coachPhoneNumber}</div>
                   ) : (
-                    <div>User Phone Number: {bk.userphonenumber}</div>
+                    <div>User Phone Number: {bk.userPhoneNumber}</div>
                   )}{" "}
                   {/* <div>Location:</div> */}
                 </div>
@@ -160,7 +173,7 @@ const Booking = () => {
           ))}
         </div>
       ) : (
-        <Blank content={"please book or register/login"} />
+        <Blank />
       )}
     </>
   );

@@ -46,7 +46,7 @@ const getUserBookings = async (req, res) => {
       userImage: `http://localhost:5000/images/${i.coach_image}`, //joinable
       // from joined table data to coach
       userId: userId,
-      userphonenumber: i.user_phonenumber,
+      userPhoneNumber: i.user_phonenumber,
       // userfirstname
       // userlastname
     }));

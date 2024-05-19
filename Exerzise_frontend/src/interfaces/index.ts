@@ -106,12 +106,6 @@ export interface TokenResponse {
 // SCHEDULE PAGE
 
 export interface BookingDataResponse {
-  // map(
-  //   arg0: (
-  //     bk: bookingDataResponse,
-  //     index: number
-  //   ) => import("react/jsx-runtime").JSX.Element
-  // ): import("react").ReactNode;
   length: number;
   bookingId: string; //backend
   date: string;
