@@ -4,19 +4,32 @@ import Navbar from "../components/Navbar";
 import CoachCard from "../components/CoachCard";
 import FilterBar from "../components/FilterBar";
 import Footer from "../components/Footer";
-import { useGetAllCoachesQuery } from "../features/api/apiSlice";
+import {
+  selectAllCoaches,
+  // selectCoachById,
+  // selectCoachIds,
+  useGetAllCoachesQuery,
+} from "../features/api/userApiSlice";
 import { filterSearch } from "../function";
 import { SearchBar } from "../components/SearchBar";
+import { useSelector } from "react-redux";
+import { CoachDataType } from "../interfaces";
 
 const CoachPage = () => {
-  const { data, isLoading } = useGetAllCoachesQuery(null);
+  const { isSuccess, isLoading } = useGetAllCoachesQuery(null);
   const [filterState, setFilterState] = useState("all");
-  const [displayData, setDisplayData] = useState(data);
   const [searchInput, setSearchInput] = useState("");
+  // const data = useSelector(selectCoachIds);
+  const allCoaches = useSelector(selectAllCoaches);
+  const [displayData, setDisplayData] = useState<
+    CoachDataType[] | undefined | any
+  >(allCoaches);
+
+  console.log(allCoaches);
 
   useEffect(() => {
-    setDisplayData(filterSearch(data, searchInput, filterState));
-  }, [data, searchInput, filterState]);
+    setDisplayData(filterSearch(allCoaches, searchInput, filterState));
+  }, [allCoaches, searchInput, filterState]);
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
@@ -27,6 +40,7 @@ const CoachPage = () => {
     <>
       <Navbar />
       <SearchBar placeholder="for coach name..." handler={searchHandler} />
+
       {isLoading ? (
         "loading"
       ) : (
@@ -36,12 +50,14 @@ const CoachPage = () => {
             setFilterState={setFilterState}
           />
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-y-10 place-items-center mx-auto w-3/4 ">
-            {isLoading ? "loading...." : <CoachCard coachData={displayData} />}
+            {isSuccess &&
+              displayData?.map((user: { userId: string }) => (
+                <CoachCard key={user.userId} userId={user.userId} />
+              ))}
             {/* <Pagination /> */}
           </div>
         </>
       )}
-
       <Footer />
     </>
   );

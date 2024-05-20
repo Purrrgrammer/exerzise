@@ -5,7 +5,7 @@ import { ReactPopupType } from "../interfaces/propTypes";
 
 const CompleteBookingPopup = (props: ReactPopupType) => {
   const {
-    refetch,
+    // refetch,
     show,
     setShow,
     starValue,
@@ -51,7 +51,7 @@ const CompleteBookingPopup = (props: ReactPopupType) => {
                 })
                 .then(() => {
                   setShow(false);
-                  refetch();
+                  // refetch();
                 });
               // console.log({
               //   comment: commentText,

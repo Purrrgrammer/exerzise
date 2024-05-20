@@ -30,7 +30,7 @@ FROM users u left join bookings b on u.user_id = b.coach_id WHERE u.user_id = $1
         ratingCount: i.done_count,
         price: i.price,
       }))
-      .filter((el) => el.userId === userId);
+      .filter((el) => el.userId === userId); //array
     res.status(200).json(responseData); //success
   } catch (error) {
     responseData.messsage = "something wrong";

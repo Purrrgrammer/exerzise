@@ -26,7 +26,7 @@ const Booking = ({ expired, cancel }: bookingProps) => {
     updateComment,
     // { isLoading: updating }, // This is the destructured mutation result
   ] = useUpdateCommentMutation();
-  const { data, isLoading, refetch } = useGetBookingsQuery({
+  const { data, isLoading } = useGetBookingsQuery({
     userId: user.userId,
     // userId: localStorage.getItem("user")
     //   ? JSON.parse(localStorage.getItem("user")!).userId
@@ -38,15 +38,13 @@ const Booking = ({ expired, cancel }: bookingProps) => {
     data && !expired && !cancel
       ? data?.filter((el) => getExpired(el.date, el, true))
       : cancel
-      ? data?.filter(
-          (el) => el.userStatus === "cancel" && el.coachStatus === "cancel"
-        )
+      ? data?.filter((el) => {
+          return el.userStatus === "cancel" || el.coachStatus === "cancel";
+        })
       : expired
       ? data?.filter((el) => getExpired(el.date, el, false))
       : null;
-  useEffect(() => {
-    refetch();
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   return (
     <>
@@ -59,9 +57,9 @@ const Booking = ({ expired, cancel }: bookingProps) => {
               key={index}
               className="flex justify-center flex-col md:flex-row m-4"
             >
-              <div className="bg-red-200 relative p-4 object-cover overflow-hidden flex justify-center">
+              <div className="bg-red-200 relative p-4 object-cover overflow-hidden flex justify-center md:w-[30%]">
                 <img
-                  className="hover:scale-150 md:hover:scale-125 transition duration-500 cursor-pointer "
+                  className="hover:scale-150 md:hover:scale-125 transition duration-500 cursor-pointer  "
                   src={`${
                     user.role === "user"
                       ? bk.coachImage
@@ -138,7 +136,7 @@ const Booking = ({ expired, cancel }: bookingProps) => {
                       key={index}
                       status={status}
                       bookingId={bk.bookingId}
-                      refetch={refetch}
+                      // refetch={refetch}
                       // setShowStatus={setShowStatus}
                       // showStatus={showStatus}
                     />
@@ -155,7 +153,7 @@ const Booking = ({ expired, cancel }: bookingProps) => {
                     {bk.bookingId}
                   </button>
                   <CompleteBookingPopup
-                    refetch={refetch}
+                    // refetch={refetch}
                     show={show}
                     setShow={setShow}
                     // bookingId={bk.bookingId}

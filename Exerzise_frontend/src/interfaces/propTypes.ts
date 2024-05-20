@@ -1,5 +1,5 @@
 import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
-import { CoachDataType, TimeSelectedType } from ".";
+import { TimeSelectedType } from ".";
 
 export interface StatusPopupPropsType {
   key: number;
@@ -64,7 +64,8 @@ export interface CommonBtnPropsType {
 }
 
 export interface CoachCardProps {
-  coachData: CoachDataType[] | undefined;
+  userId: string;
+  // coachData: CoachDataType[] | undefined;
 }
 
 export interface FilterBarPropType {

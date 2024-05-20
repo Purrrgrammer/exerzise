@@ -10,14 +10,20 @@ import DayPicker from "../components/DayPicker";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import {
-  useGetCoachQuery,
   useGetCoachSceduleByDayQuery,
   usePostBookingsMutation,
 } from "../features/api/apiSlice";
+import {
+  selectCoachById,
+  useGetAllCoachesQuery,
+  useGetCoachQuery,
+} from "../features/api/userApiSlice";
 import { removeObjectValueDupe } from "../function";
 import CommonBtn from "../components/CommonBtn";
 import { CoachTimeResponse, ForUserBookingType } from "../interfaces";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { useAppSelector } from "../store";
 
 const CoachDetail = () => {
   const [postBookings] = usePostBookingsMutation();
@@ -28,6 +34,9 @@ const CoachDetail = () => {
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
   const { coachId } = useParams<string>();
   const { data } = useGetCoachQuery(coachId); //coach data
+  const { isSuccess } = useGetAllCoachesQuery(null);
+  const coach = useSelector((state) => selectCoachById(state, coachId));
+
   // schedule
   const [userChose, setUserChose] = useState<ForUserBookingType[]>([]);
   const {
@@ -44,6 +53,7 @@ const CoachDetail = () => {
     coachSceduleData?.availableTime || null
     // coachSceduleData?.availableTime
   );
+  const userId = useAppSelector((state) => state.user.userId);
 
   useEffect(() => {
     console.log("coach detail data", data);
@@ -73,7 +83,7 @@ const CoachDetail = () => {
   // create all free is time and filter by booking Time
   const confirmBookingHandler = () => {
     //problem is i cannot get promise response from the mutation
-    if (userChose.length != 0) {
+    if (userChose.length !== 0) {
       const resolveAfter3Sec = new Promise((resolve) => {
         setTimeout(resolve, 3000); //get true from responseData.success
       });
@@ -102,9 +112,10 @@ const CoachDetail = () => {
   const timeSelectHandler = (time: string) => {
     setUserChose((prev) => {
       const { session } = coachSceduleData.data;
-      const { userId } = localStorage.getItem("user")!
-        ? JSON.parse(localStorage.getItem("user")!)
-        : " ";
+
+      // const { userId } = localStorage.getItem("user")!
+      //   ? JSON.parse(localStorage.getItem("user")!)
+      //   : "";
       const newTimeSelected: ForUserBookingType = {
         date: currentDate,
         day: currentDay,
@@ -154,7 +165,9 @@ const CoachDetail = () => {
     <>
       <Navbar />
       <div className="flex justify-center my-10">
-        <CoachCard coachData={data} />
+        {/* <CoachCard coachData={data} />
+         */}
+        {isSuccess && <CoachCard key={coach.userId} userId={coach.userId} />}
         <div>
           <DayPicker
             currentDate={currentDate}

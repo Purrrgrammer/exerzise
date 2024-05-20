@@ -28,12 +28,14 @@ import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { apiSlice } from "./features/api/apiSlice";
 import { setToken } from "./features/slices/tokenSlice";
 import AlertBox from "./components/AlertBox";
+// import { userApiSlice } from "./features/api/userApiSlice";
 
 // const userlocal = localStorage.getItem("user");
 // const user = userlocal
 //   ? (JSON.parse(userlocal) as userLoginResponse)
 //   : undefined;
 
+// store.dispatch(userApiSlice.endpoints.getAllCoaches.initiate(null));
 const router = createBrowserRouter([
   {
     path: "/",

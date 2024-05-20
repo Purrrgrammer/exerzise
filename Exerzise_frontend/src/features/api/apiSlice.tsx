@@ -31,17 +31,16 @@ export const apiSlice = createApi({
         method: "POST",
         body: form,
       }),
+      invalidatesTags: () => ["User"],
       transformResponse: (response: { success: boolean; message: string }) =>
         response,
     }),
     login: builder.mutation({
-      query: (usernamepassword) => {
-        return {
-          url: "login",
-          method: "POST",
-          body: usernamepassword,
-        };
-      },
+      query: (usernamepassword) => ({
+        url: "login",
+        method: "POST",
+        body: usernamepassword,
+      }),
       transformResponse: (response: {
         data: UserLoginResponse;
         _token: string;
@@ -49,27 +48,43 @@ export const apiSlice = createApi({
         message: string;
       }) => response,
     }),
-    getAllCoaches: builder.query({
-      query: () => `coaches`,
-      providesTags: ["User"],
-      transformResponse: (response: {
-        data: CoachDataType[];
-        success: boolean;
-      }) => response.data,
-    }),
-    getCoach: builder.query({
-      query: (userId) => `coach/${userId}`,
-      providesTags: (_result, _error, id) => [{ type: "User", id }],
-      transformResponse: (response: {
-        data: CoachDataType[];
-        success: boolean;
-      }) => response.data,
-    }),
+    // getAllCoaches: builder.query({
+    //   query: () => `coaches`,
+    //   providesTags: (result, _error) =>
+    //     result
+    //       ? [
+    //           ...result.map(({ userId }) => ({
+    //             type: "User" as const,
+    //             userId,
+    //           })),
+    //           { type: "User", id: "LIST" },
+    //         ]
+    //       : [{ type: "User", id: "LIST" }],
+    //   transformResponse: (response: {
+    //     data: CoachDataType[];
+    //     success: boolean;
+    //   }) => {
+    //     console.log("this is bad");
+
+    //     return response.data;
+    //   },
+    // }),
+    // getCoach: builder.query({
+    //   query: (userId) => `coach/${userId}`,
+    //   providesTags: (arg) => [{ type: "User", arg }],
+    //   transformResponse: (response: {
+    //     data: CoachDataType[];
+    //     success: boolean;
+    //   }) => response.data,
+    // }),
     getCoachSceduleByDay: builder.query<
       any,
       { coachId: string | undefined; date: string }
     >({
       query: (arg) => `coach/schedule/${arg.coachId}?time=30&date=${arg.date}`,
+      providesTags: (result) => [
+        { type: "Schedule", id: result.timeData.timeId },
+      ],
       transformResponse: (response: {
         data: CoachDataType[];
         timeData: CoachTimeResponse[];
@@ -97,7 +112,15 @@ export const apiSlice = createApi({
           success: boolean;
         }) => response.data,
       }),
-      providesTags: (_result, _error, id) => [{ type: "User", id }],
+      providesTags: (result, _error) =>
+        result
+          ? [
+              ...result.map(({ bookingId }) => ({
+                type: "Booking" as const,
+                id: bookingId,
+              })),
+            ]
+          : [{ type: "Booking", id: "LIST" }],
       transformResponse: (response: {
         data: BookingDataResponse[];
         success: boolean;
@@ -129,9 +152,10 @@ export const apiSlice = createApi({
         url: `schedule/${bookingId}?role=${role}`,
         body: { status },
         params: bookingId,
-        providesTags: ["Schedule"],
       }),
-      invalidatesTags: ["Schedule"],
+      invalidatesTags: (_result, _error, { bookingId }) => [
+        { type: "Booking", id: bookingId },
+      ],
     }),
     updateComment: builder.mutation({
       query: ({ bookingId, data }) => ({
@@ -141,6 +165,12 @@ export const apiSlice = createApi({
       }),
       transformResponse: (response: { message: string; success: boolean }) =>
         response.message,
+      invalidatesTags: (_result, _error, { bookingId }) => [
+        {
+          type: "Booking",
+          bookingId,
+        },
+      ],
     }),
     getUserProfile: builder.query({
       query: () => ({
@@ -159,6 +189,9 @@ export const apiSlice = createApi({
         url: `schedule/delete/${coachId}`,
         body: { day: day },
       }),
+      invalidatesTags: (_result, _error, { coachId }) => [
+        { type: "Schedule", coachId },
+      ],
     }),
     upload: builder.mutation({
       query: ({ userId, imageFile }) => {
@@ -171,7 +204,6 @@ export const apiSlice = createApi({
         formData.append("userId", userId);
         console.log({ imageFile, userId });
         console.log("logging formData", Array.from(formData));
-
         return {
           method: "post",
           url: `upload/${userId}`,
@@ -180,14 +212,17 @@ export const apiSlice = createApi({
           params: userId,
         };
       },
+      invalidatesTags: (_result, _error, { userId }) => [
+        { type: "User", userId },
+      ],
     }),
   }),
 });
 export const {
-  useGetCoachQuery,
+  // useGetAllCoachesQuery,
+  // useGetCoachQuery,
   useLoginMutation,
   useRegisterMutation,
-  useGetAllCoachesQuery,
   useGetCoachSceduleByDayQuery,
   usePostScheduleMutation,
   useGetBookingsQuery,
@@ -200,6 +235,22 @@ export const {
   useUploadMutation,
 } = apiSlice;
 
+// export const selectCoachesResult =
+//   apiSlice.endpoints.getAllCoaches.select(null);
+
+// const emptyCoaches: never[] = [];
+// export const selectAllCoaches = createSelector(
+//   selectCoachesResult,
+//   (coachesResult) => coachesResult?.data ?? emptyCoaches
+// );
+
+// export const selectCoachById = createSelector(
+//   selectAllCoaches,
+//   (state, coachId) => coachId,
+//   (coaches, coachId) => coaches.find((coach) => coach.id === coachId)
+// );
+
+////////////////////////////////
 //axios base query
 /* const axi = axios.create({
   baseURL: "http://localhost:5000/",

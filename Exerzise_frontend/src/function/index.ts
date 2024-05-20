@@ -113,24 +113,26 @@ export const findLocalUser = (user: string, globalUser: UserLoginResponse) => {
 //filter seearch
 
 export const filterSearch = (
-  target: CoachDataType[] | undefined,
+  target: CoachDataType[] | undefined | any,
   str: string,
   session: string
 ) => {
   if (target !== undefined) {
-    return target.filter((item) => {
-      const fullName =
-        item.firstname.toLowerCase() + " " + item.lastname.toLowerCase();
-      if (fullName.includes(str.toLowerCase())) {
-        // console.log("items", item);
-        // console.log("session", session);
-        if (session === "all") {
-          return item;
-        } else {
-          return item.session === session;
+    return target.filter(
+      (item: { firstname: string; lastname: string; session: string }) => {
+        const fullName =
+          item.firstname.toLowerCase() + " " + item.lastname.toLowerCase();
+        if (fullName.includes(str.toLowerCase())) {
+          // console.log("items", item);
+          // console.log("session", session);
+          if (session === "all") {
+            return item;
+          } else {
+            return item.session === session;
+          }
         }
       }
-    });
+    );
   }
 };
 
@@ -142,9 +144,13 @@ export const getExpired = (
   const timeNow = new Date().getTime();
   const bookingTime = new Date(inputbookingTime).getTime();
   const timeDiff = bookingTime - timeNow;
-  console.log(el);
+  // console.log(el);
   if (no === true) {
-    if (el.userStatus !== "cancel" && el.coachStatus !== "cancel") {
+    if (
+      el.userStatus !== "cancel" &&
+      el.coachStatus !== "cancel" &&
+      new Date(el.date).getTime() > timeNow
+    ) {
       return el;
     }
   } else {

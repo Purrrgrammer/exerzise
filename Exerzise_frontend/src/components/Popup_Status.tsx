@@ -6,7 +6,7 @@ import { StatusPopupPropsType } from "../interfaces/propTypes";
 import { useState } from "react";
 import { useAppSelector } from "../store";
 
-const StatusPopup = ({ status, bookingId, refetch }: StatusPopupPropsType) => {
+const StatusPopup = ({ status, bookingId }: StatusPopupPropsType) => {
   const user = useAppSelector((state) => state.user);
 
   const [
@@ -60,7 +60,7 @@ const StatusPopup = ({ status, bookingId, refetch }: StatusPopupPropsType) => {
                     //   success: response.message,
                     //   error: "the update has been rejected 🤯",
                     // });
-                    refetch();
+                    // refetch();
                   })
                   .catch((err) => {
                     toast.error(err.data.message);

@@ -8,9 +8,9 @@ export interface ExtendType extends UserLoginResponse {
 }
 export interface ServerResponseType {
   data: UserLoginResponse;
-  _token: string;
-  success: boolean;
-  message: string;
+  _token?: string;
+  success?: boolean;
+  message?: string;
 }
 export interface PostBookingPayloadType {
   userId: string;
