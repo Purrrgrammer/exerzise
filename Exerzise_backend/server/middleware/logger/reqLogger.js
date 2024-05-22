@@ -1,6 +1,7 @@
 const logger = (req, res, next) => {
-  console.log("logger works!");
-  console.log("this is", req.url);
+  console.log(`req params ${req.params.userId}`);
+  // console.log(`req query`);
+  console.log(`route ${req.url} called`);
   next();
 };
 

@@ -1,24 +1,29 @@
 const pool = require("../../db/pool");
-const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
-const { log } = require("console");
-
 const upload = async (req, res) => {
-  let responseData = {};
   const { userId } = req.params;
   const imageFile = req.file;
-  const rootFolder =
-    "C:/Users/John/Desktop/Coding/projects/Exerzise/Exerzise_backend/server/public/images"; // Replace with the path to your root folder
+
+  console.log(`userId from controller ${userId}`);
+  // console.log(`imageFile ${imageFile.filename}`);
+  const rootFolder = path.resolve("server", "public", "images");
+
+  const compare = `${imageFile.filename} 
+  VS 
+  ${userId}`;
+  console.log(`comparing ${compare}`);
   if (!imageFile) {
     return res.status(400).json({ message: "Please Upload a file." });
   }
   try {
+    const newFileName = req.file.filename;
+
     function findFilesByKeyword(rootFolder, keyword, results = []) {
       // Read the contents of the current folder
       const files = fs.readdirSync(rootFolder);
       const excepts = files.slice(0, files.length - 1);
-      // console.log(excepts);
+      // console.log(`excepts ${excepts}`);
       // Iterate through each item in the folder
       for (const file of excepts) {
         const filePath = path.join(rootFolder, file);
@@ -38,7 +43,6 @@ const upload = async (req, res) => {
     }
     findFilesByKeyword(rootFolder, userId);
     // console.log(foundFiles);
-    const newFileName = req.file.filename;
     const response = await pool.query(
       `UPDATE users SET user_image = '${newFileName}' WHERE user_id = '${userId}'`
     );
@@ -46,8 +50,8 @@ const upload = async (req, res) => {
       message: `File ${newFileName} Uploaded Successfully`,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500);
+    console.log(`error from uploaad`, error);
+    return res.status(500);
   } finally {
   }
   res.end();

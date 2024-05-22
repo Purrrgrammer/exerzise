@@ -1,15 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-//multer for file uploading
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    return cb(null, "./server/public/images");
-  },
-  filename: (req, file, cb) => {
-    return cb(null, `${Date.now()}_${req.params.userId}`);
-  },
-});
-const uploadd = multer({ storage });
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
@@ -24,7 +15,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.static("./server/public"));
-app.use(logger);
 app.use(checkUserAuthPage, require("./routes/rootRoutes"));
 
 app.use((req, res, next) => {
@@ -40,9 +30,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(logger);
+
 app.use("/register", require("./routes/registerRoutes"));
 app.use("/login", require("./routes/loginRoutes"));
-app.use("/upload", uploadd.single("file"), require("./routes/uploadRoutes"));
+app.use("/upload", require("./routes/uploadRoutes"));
 app.use("/user", require("./routes/userRoutes"));
 app.use("/coach", require("./routes/coachRoutes"));
 app.use("/schedule", require("./routes/scheduleRoutes"));

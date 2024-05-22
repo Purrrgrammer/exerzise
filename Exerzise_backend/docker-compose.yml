@@ -1,7 +1,7 @@
 version: "latest"
 services:
   db:
-    image: postgres
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -9,9 +9,9 @@ services:
     volumes:
       - ./pgdatavolumn:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5436:5432"
   web:
-    image: exerzise_backend
+    image: exerzise_backend:1.0
     depends_on:
       - db
     ports:
