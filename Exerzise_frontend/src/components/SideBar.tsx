@@ -29,10 +29,9 @@ const SideBar = ({ setContent }: SideBarPropsType) => {
       .unwrap()
       .then((fulfillled) => {
         toast.success(fulfillled.message);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       })
       .catch((err) => {
         console.log(err);

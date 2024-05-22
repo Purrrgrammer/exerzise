@@ -9,7 +9,7 @@ import { useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 // import { findLocalUser } from "../function";
 const pages = [
-  { name: "Exerzise", path: "/home", icon: "../../public/logo1.jpg" },
+  { name: "Exerzise", path: "/home", icon: "/logo1.jpg" },
   { name: "About", path: "/about" },
   { name: "Blog", path: "/blog" },
   { name: "Coaches", path: "/coach" },
