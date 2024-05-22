@@ -128,7 +128,15 @@ export const apiSlice = createApi({
     }),
     getCoachTime: builder.query({
       query: (coachId) => `coach/time/${coachId}`,
-      providesTags: ["User"],
+      providesTags: (result, _error) =>
+        result
+          ? [
+              ...result.map(({ timeId }) => ({
+                type: "Schedule" as const,
+                id: timeId,
+              })),
+            ]
+          : [{ type: "Schedule", id: "LIST" }],
       transformResponse: (response: {
         data: CoachTimeResponse[];
         success: boolean;
@@ -190,7 +198,7 @@ export const apiSlice = createApi({
         body: { day: day },
       }),
       invalidatesTags: (_result, _error, { coachId }) => [
-        { type: "Schedule", coachId },
+        { type: "Schedule", id: coachId },
       ],
     }),
     upload: builder.mutation({

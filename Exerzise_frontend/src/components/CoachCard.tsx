@@ -20,7 +20,7 @@ const CoachCard = ({ userId }: CoachCardProps) => {
               backgroundImage: `url(${
                 backgroundImages.some((bg) => bg.name === user.session)
                   ? backgroundImages.find((bg) => bg.name === user.session)?.bg
-                  : null
+                  : "https://cdn.photoroom.com/v1/assets-cached.jpg?path=backgrounds_v3/red/image_93_color4.jpg"
               }
                       )`,
             }}
@@ -28,7 +28,7 @@ const CoachCard = ({ userId }: CoachCardProps) => {
             <img
               className="coach-img"
               src={user ? user.userImage : undefined}
-              alt=""
+              alt="coach-img"
             />
           </div>
           <div className="coach-bio flex flex-col justify-around">

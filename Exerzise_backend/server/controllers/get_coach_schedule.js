@@ -97,7 +97,7 @@ const getCoachSchedule = async (req, res) => {
       endOfAvailableTime: i.endofavailable_time,
       price: i.price,
     }));
-    console.log("responseData.timeData", responseData.timeData);
+    // console.log("responseData.timeData", responseData.timeData);
     // console.log("response", response);
     // console.log("param[1]", param[1]);
     if (responseData.timeData[0].availableTime !== null) {

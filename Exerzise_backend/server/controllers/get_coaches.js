@@ -2,7 +2,7 @@ const pool = require("../db/pool");
 
 const getCoaches = async (req, res) => {
   let responseData = {};
-  console.log("user req detail to get coaches", req._user);
+  // console.log("user req detail to get coaches", req._user);
   try {
     //     const response = await pool.query(
     //       `SELECT u.username,u.user_id,first_name,last_name,detail,user_image,u.phone_number ,u.session, coalesce(sum(b.rating)/count(b.rating)) as average_rating,count(b.rating) as done_count

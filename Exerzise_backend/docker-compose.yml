@@ -11,7 +11,7 @@ services:
     ports:
       - "5436:5432"
   web:
-    image: exerzise_backend:1.0
+    image: exerzise_backend:3.0
     depends_on:
       - db
     ports:

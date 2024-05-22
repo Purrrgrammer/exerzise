@@ -16,6 +16,7 @@ import {
 } from "../features/api/apiSlice";
 import { useAppSelector } from "../store";
 import { TimeSelectedType } from "../interfaces";
+import { toast } from "react-toastify";
 
 const CoachSchedule = () => {
   const currentCoachId = useAppSelector((state) => state.user.userId);
@@ -99,7 +100,11 @@ const CoachSchedule = () => {
               postSchedule({
                 timeAvailable: timeSelected,
                 coachId: currentCoachId,
-              });
+              })
+                .unwrap()
+                .then((res: { message: string }) => {
+                  toast.success(res.message);
+                });
             }}
           />
         }
@@ -108,6 +113,7 @@ const CoachSchedule = () => {
             placeholder={"clear"}
             onClick={() => {
               setTimeSelected([]);
+              toast.success("Scehdule Cleared");
             }}
           />
         }
@@ -134,7 +140,14 @@ const CoachSchedule = () => {
                   deleteSchedule({
                     coachId: currentCoachId,
                     day: val.day,
-                  });
+                  })
+                    .unwrap()
+                    .then((res: { message: string }) => {
+                      toast.success(res.message);
+                    })
+                    .catch((err: { data: { message: string } }) => {
+                      toast.warn(err.data.message);
+                    });
                 }}
                 className="absolute text-white top-0 right-2 hover:text-slate-300"
               >

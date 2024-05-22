@@ -6,9 +6,21 @@ const bookCoachTime = async (req, res) => {
   let responseData = {};
   let input = req.body;
   let coachParam = req.params.coachId;
+
   try {
     console.log(`coachParam`, coachParam);
     console.log("input", input);
+
+    let isCoach = `SELECT * FROM users WHERE user_id = '${input[0].userId}';`;
+    const verifyRole = await pool.query(isCoach);
+    if (verifyRole.rowCount > 0) {
+      return res.status(409).send({
+        message: "Cannot book other Coach please switch to User mode ",
+      });
+    }
+    if (coachParam === input[0].userId) {
+      return res.status(409).send({ message: "Cannot book yourself" });
+    }
     let sqlFind = `SELECT * FROM bookings WHERE date = $1 and day = $2 and time_from = $3 and time_to = $4;`;
 
     for (let index = 0; index < input.length; index++) {
